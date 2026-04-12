@@ -6,5 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
-    //
+   // protected $fillable = ['type'];
+   public function design()
+   {
+    return $this->belongsTo(Design::class);
+   }
+   public function product()
+   {
+    return $this->belongsTo(Product::class);
+   }
 }

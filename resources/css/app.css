@@ -9,3 +9,45 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+ @keyframes flyAround {
+        0% { transform: translate(0,0) rotate(0deg); opacity: 0.12; }
+        25% { transform: translate(110px,-60px) rotate(45deg); opacity: 0.15; }
+        50% { transform: translate(60px,110px) rotate(90deg); opacity: 0.12; }
+        75% { transform: translate(-110px,60px) rotate(180deg); opacity: 0.14; }
+        100% { transform: translate(0,0) rotate(360deg); opacity: 0.12; }
+      }
+      .tree { animation: flyAround 18s linear infinite; }
+      .tree-1  { left: 10%; top: 15%; animation-duration: 18s; animation-delay: 0s; }
+      .tree-2  { right: 15%; top: 25%; animation-duration: 20s; animation-delay: -5s; font-size: 3.5rem; }
+      .tree-3  { left: 20%; top: 60%; animation-duration: 22s; animation-delay: -10s; font-size: 3rem; }
+      .tree-4  { right: 10%; top: 50%; animation-duration: 19s; animation-delay: -3s; font-size: 3.8rem; }
+      .tree-5  { left: 5%; top: 40%; animation-duration: 21s; animation-delay: -8s; font-size: 3.2rem; }
+      .tree-6  { right: 25%; top: 10%; animation-duration: 17s; animation-delay: -12s; font-size: 3.5rem; }
+      .tree-7  { left: 35%; top: 75%; animation-duration: 23s; animation-delay: -6s; font-size: 3.3rem; }
+      .tree-8  { right: 40%; top: 35%; animation-duration: 19s; animation-delay: -11s; font-size: 3.7rem; }
+      .tree-9  { left: 50%; top: 20%; animation-duration: 20s; animation-delay: -4s; font-size: 3.4rem; }
+      .tree-10 { right: 5%; top: 70%; animation-duration: 21s; animation-delay: -9s; font-size: 3.6rem; }
+
+      @keyframes slideInLeft { from { opacity:0; transform: translateX(-40px);} to {opacity:1; transform: translateX(0);} }
+      @keyframes slideInRight{ from { opacity:0; transform: translateX(40px);} to {opacity:1; transform: translateX(0);} }
+      .hero-left { animation: slideInLeft 0.8s ease; }
+      .hero-right{ animation: slideInRight 0.8s ease; }
+
+      @keyframes float {
+        0%,100% { transform: translateY(0) rotateX(10deg) rotateY(10deg); }
+        50% { transform: translateY(-26px) rotateX(15deg) rotateY(15deg); }
+      }
+      @keyframes cedarSpin {
+        0% { transform: rotateZ(-6deg) scale(1); }
+        25% { transform: rotateZ(2deg) scale(1.03); }
+        50% { transform: rotateZ(6deg) scale(1); }
+        75% { transform: rotateZ(-2deg) scale(1.03); }
+        100% { transform: rotateZ(-6deg) scale(1); }
+      }
+      .cube { animation: float 3s ease-in-out infinite; transform-style: preserve-3d; }
+      .cedar { animation: cedarSpin 4s ease-in-out infinite; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+      .grain {
+        background-image:
+          repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px),
+          repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.04) 1px, rgba(0,0,0,0.04) 2px);
+      }

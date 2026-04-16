@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DesignImages extends Model
 {
-    // protected $fillable = ['design_id', 'image'];
+    protected $fillable = ['design_id', 'image'];
      public function design()
     {
         return $this->belongsTo(Design::class);

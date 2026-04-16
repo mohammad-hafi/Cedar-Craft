@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('designs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('product_name');
             $table->string('dimentions');
             $table->string('description');
-            $table->foreignId('material_id');
+            $table->foreignId('material_id')->constrained()->cascadeOnDelete();
             $table->string('status')->default('pending');
             $table->integer('estimated_price');
             $table->timestamps();

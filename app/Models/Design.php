@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\DesignImages;
+use App\Models\Material;
+use App\Models\User;
 use App\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Design extends Model
 {
-    protected $fillable = ['name', 'description','material_id', 'estimated_price', 'status', 'dimensions'];
+    protected $fillable = ['user_id','product_name', 'description','material_id', 'estimated_price', 'status', 'dimentions'];
     protected $casts=[
         'status'=>Status::class,
     ];
@@ -25,6 +28,6 @@ class Design extends Model
      }
       public function material()
         {
-            return $this->hasMany(Material::class);
+            return $this->belongsTo(Material::class);
         }
 }

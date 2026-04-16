@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->foreignId('material_id');
+            $table->foreignId('material_id')->constrained()->cascadeOnDelete();
             $table->integer('stock')->default(0);
             $table->integer('price');
             $table->string('dimentions')->nullable();

@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
-   // protected $fillable = ['type'];
+   protected $fillable = ['id','type'];
    public function design()
    {
-    return $this->belongsTo(Design::class);
+    return $this->hasMany(Design::class);
    }
    public function product()
    {
-    return $this->belongsTo(Product::class);
+    return $this->hasMany(Product::class);
    }
 }

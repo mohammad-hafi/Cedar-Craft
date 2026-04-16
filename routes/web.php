@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupUser;
+use App\Http\Controllers\Product\DesignController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('pages/home');
 });
+
+
+
 
 Route::middleware('guest')->group(function(){
 Route::get('/signup',[SignupUser::class,'create']);
@@ -17,4 +21,7 @@ Route::post('/login',[LoginController::class,'store']);
 
 Route::middleware('auth')->group(function(){
 Route::delete('/logout',[LoginController::class,'destroy']);
+Route::get('/customize',[DesignController::class,'index']);
+Route::post('/customize',[DesignController::class,'store']);
+Route::delete('/customize/{design}',[DesignController::class,'destroy']);
  });

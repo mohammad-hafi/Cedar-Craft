@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\DesignImages;
 use App\Models\Material;
 use App\Models\User;
+use App\RequestStatus;
 use App\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,10 +14,10 @@ class Design extends Model
 {
     protected $fillable = ['user_id','product_name', 'description','material_id', 'estimated_price', 'status', 'dimentions'];
     protected $casts=[
-        'status'=>Status::class,
+        'status'=>RequestStatus::class,
     ];
     protected $attributes = [
-        'status'=>Status::PENDING,
+        'status'=>RequestStatus::PENDING,
     ];
      public function images():HasMany
      {

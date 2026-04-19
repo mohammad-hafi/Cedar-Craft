@@ -76,10 +76,13 @@
 
     </div>
 
-    <div class="absolute right-4 top-4 rounded-full bg-yellow-500 px-4 py-1 text-xs font-extrabold text-white">
-      {{ $design->status }}
-    </div>
-
+    <div class="absolute right-4 top-4 rounded-full px-4 py-1 text-xs font-extrabold text-white
+    {{ strtolower($design->status->value) === 'pending' ? 'bg-yellow-500' : '' }}
+    {{ strtolower($design->status->value) === 'accepted' ? 'bg-emerald-600' : '' }}
+    {{ strtolower($design->status->value) === 'rejected' ? 'bg-red-600' : '' }}
+">
+    {{ $design->status }}
+</div>
   </div>
 
   <!-- CONTENT -->
@@ -145,7 +148,7 @@
         <x-form.field label="Product Name*" name="product_name" placeholder="Enter Your Product Name"/>
 
         <label for="description" class="label block font-semibold text-gray-800 mb-2">Description*</label>
-        <textarea id="description" name="description" class="input h-30 w-full rounded-lg border-2 border-gray-200 px-4 py-3 focus:outline-none focus:border-emerald-900" placeholder="Enter Your Product Description"></textarea>
+        <textarea id="description" name="description" class="input h-30 w-full rounded-lg border-2 border-gray-200 px-4 py-3 focus:outline-none focus:border-emerald-900" placeholder="Enter Your Product Description">{{ old('description') }}</textarea>
         <x-form.error name="description"/>
     <label class="block font-semibold text-gray-800 mb-2">Material*</label>
     <select name="material" id="material" class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
@@ -156,7 +159,7 @@
     </select>
 
     <x-form.field label="Dimentions*" name="dimentions" placeholder="Enter Your Product dimentions"/>
-    <x-form.field label="Estimated Price*" name="price" placeholder="Enter Your Product dimentions"/>
+    <x-form.field label="Estimated Price $*" type="number" name="price" placeholder="Enter Your Product dimentions"/>
 
     <x-form.field label="Image*" name="image[]" type="file"   class="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 focus:outline-none" multiple/>
 
@@ -183,4 +186,5 @@
   
   </div> 
 </div>
+ <x-form.footer/>
 </x-layout>

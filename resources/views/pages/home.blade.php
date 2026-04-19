@@ -32,4 +32,5 @@
       </div>
     </div> 
     </section>  
+     <x-form.footer/>
 </x-layout>

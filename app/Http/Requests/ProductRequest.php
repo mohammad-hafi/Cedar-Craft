@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DesignRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,13 @@ class DesignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_name'=>['required','string','max:255'],
+            'name'=>['required','string','max:255'],
             'description'=>['required','string','min:3','max:1000'],
             'material'=>['required'],
             'dimentions'=>['required','string'],
             'price'=>['required','numeric','min:5'],
             'image' => ['required', 'array'],
             'image.*' => ['image', 'mimes:jpg,png,jpeg,gif,svg']
-
         ];
     }
 }

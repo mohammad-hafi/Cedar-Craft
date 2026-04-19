@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
-    // protected $fillable = ['user_id', 'status'];
+     protected $fillable = ['user_id', 'status'];
     protected $casts=[
         'status'=>Status::class,
     ];

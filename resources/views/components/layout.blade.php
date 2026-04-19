@@ -10,7 +10,7 @@
 <body>
     <x-form.nav/>
     {{ $slot }}
-    <x-form.footer/>
+   
      @session('success')
 <div class=" fixed z-50 bg-gradient-to-br from-emerald-500 to-emerald-900 px-4 py-3 bottom-4 right-4 rounded-lg" 
     x-data="{show:true}"

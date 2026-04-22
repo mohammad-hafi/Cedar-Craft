@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\Design;
 use App\Models\Material;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +20,9 @@ class AdminController extends Controller
     {
 
         return view('pages/admin',[
-            'designs'=>Auth::user()->designs,
-            'materials'=>Material::all()
+            'designs'=>Design::all(),
+            'materials'=>Material::all(),
+            'orders'=>Order::all(),
         ]);
     }
 

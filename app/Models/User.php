@@ -52,4 +52,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Design::class);
     }
+    public function is_admin(): bool
+    {
+        return $this->role === "admin";
+    }
 }

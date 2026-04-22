@@ -88,7 +88,9 @@
             </div>
             <form action="{{ route('product.add',$product->id) }}" method="POST">
                 @csrf
-                <x-form.field label="Quantity" name="quantity" type="number"/>
+                @auth
+                <x-form.field label="Quantity" value="1" name="quantity" type="number" min="1"/>    
+                @endauth
                 <input type="hidden" name="product" value="{{ $product->id }}"/>
                 <input type="hidden" name="price" value="{{ $product->price }}"/>
             <button class="w-full mt-6 bg-emerald-600 text-white py-2 px-4 rounded-xl hover:bg-emerald-700 transition">

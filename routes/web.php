@@ -3,31 +3,40 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupUser;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\Product\DesignController;
+use App\Http\Controllers\Product\OrderController;
 use App\Http\Controllers\Product\ShopController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('pages/home');
-});
-Route::get('/shop',[ShopController::class,'index']);
-Route::get('/shop/show/{product}',[ShopController::class,'show'])->name('shop.show');
-Route::post('/shop/add/{product}',[ShopController::class,'store'])->name('product.add');
+Route::get('/',[PageController::class,'home']);
+Route::get('/about',[PageController::class,'about']); 
 
+Route::middleware('admin')->group(function () {
 Route::get('/admin',[AdminController::class,'index']);
 Route::post('/admin',[AdminController::class,'store']);
+Route::put('/admin/products/{product}',[ShopController::class,'update']);
+Route::delete('/admin/products/{product}',[ShopController::class,'destroy']);
 Route::patch('/admin/{design}/status',[AdminController::class,'update']);
+});
+
+Route::get('/shop/show/{product}',[ShopController::class,'show'])->name('shop.show');
+Route::get('/shop',[ShopController::class,'index']);
+
 
 Route::middleware('guest')->group(function(){
 Route::get('/signup',[SignupUser::class,'create']);
 Route::post('/signup',[SignupUser::class,'store']);
 Route::get('/login',[LoginController::class,'create'])->name('login');
-Route::post('/login',[LoginController::class,'store']);
-});
-
+Route::post('/login',[LoginController::class,'store']);    
+    });
+    
 Route::middleware('auth')->group(function(){
 Route::delete('/logout',[LoginController::class,'destroy']);
 Route::get('/customize',[DesignController::class,'index']);
 Route::post('/customize',[DesignController::class,'store']);
 Route::delete('/customize/{design}',[DesignController::class,'destroy']);
+Route::get('/cart',[OrderController::class,'index']);
+Route::delete('/cart/remove/{order}',[OrderController::class,'destroy']);
+Route::post('/shop/add/{product}',[ShopController::class,'store'])->name('product.add');
  });

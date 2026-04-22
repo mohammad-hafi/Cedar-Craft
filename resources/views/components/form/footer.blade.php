@@ -7,11 +7,10 @@
       <div>
         <h4 class="mb-3 font-bold text-amber-300">Quick Links</h4>
         <ul class="space-y-2 text-white/80">
-          <li><a class="hover:text-amber-300" href="index.html">Home</a></li>
-          <li><a class="hover:text-amber-300" href="Pages/shop.html">Shop</a></li>
-          <li><a class="hover:text-amber-300" href="Pages/about.html">About</a></li>
-          <li><a class="hover:text-amber-300" href="Pages/customize.html">Customize</a></li>
-          <li><a class="hover:text-amber-300" href="Pages/admin.html">Admin</a></li>
+          <li><a class="hover:text-amber-300" href="/">Home</a></li>
+          <li><a class="hover:text-amber-300" href="/shop">Shop</a></li>
+          <li><a class="hover:text-amber-300" href="/about">About</a></li>
+          <li><a class="hover:text-amber-300" href="/customize">Customize</a></li>
         </ul>
       </div>
       <div>

@@ -61,6 +61,7 @@
         @endif
         <div id="customGrid" class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 @foreach($designs as $design)
+@if(strtolower($design->status->value) !== 'rejected')
 <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
 
   <!-- IMAGE SLIDER -->
@@ -166,6 +167,7 @@
     </button>
 </form>
 </div>
+@endif
 @endforeach
         </div>
       </section>
@@ -177,7 +179,6 @@
             <h2 class="text-2xl font-extrabold text-emerald-900">Add New Product</h2>
           </div>
         </div>
-
         <form action="/admin" method="POST" enctype="multipart/form-data" id="newProductForm" class="mt-6 grid grid-cols-1 gap-5 rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:grid-cols-2">
           @csrf
             <div class="sm:col-span-2 space-y-6">
@@ -189,8 +190,7 @@
     <select name="material" id="material" class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
       @foreach ($materials as $type)
           <option value="{{ $type->id }}">{{$type->type}}</option>
-      @endforeach
-      
+      @endforeach  
     </select>
           </div>
 
@@ -207,22 +207,6 @@
     <button type="submit" class="w-full rounded-lg bg-emerald-900 px-6 py-3 font-extrabold text-white hover:bg-emerald-950 sm:w-auto">Save Product</button>
           </div>
         </form>
-
-        {{-- <div class="mt-10">
-          <div class="flex items-center justify-between">
-            <h3 class="text-xl font-extrabold text-emerald-900">All Products</h3>
-            <button id="refreshProductsBtn" class="rounded-lg bg-emerald-900 px-4 py-2 font-extrabold text-white hover:bg-emerald-950">Refresh</button>
-          </div> --}}
-          
-          {{-- <div id="productsEmpty" class="mt-6 rounded-xl border border-dashed border-gray-300 bg-white p-8 text-center text-gray-600 ">
-            <p class="font-extrabold text-emerald-900">No products found.</p>
-            <p class="mt-2">Use the form above to add your first product.</p>
-          </div>
-
-          <div id="productsGrid" class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            //products is here
-          </div>
-        </div> --}}
       </section>
 
       <!-- ===== Orders ===== -->
@@ -230,20 +214,44 @@
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 class="text-2xl font-extrabold text-emerald-900">Customer Orders</h2>
-            <p class="text-gray-600">
-              Orders are read from localStorage key <code class="font-bold">cedar_orders</code>.
-              (You can create orders from checkout later.)
-            </p>
           </div>
           <button id="refreshOrdersBtn" class="rounded-lg bg-emerald-900 px-4 py-2 font-extrabold text-white hover:bg-emerald-950">Refresh</button>
         </div>
-
+        
+        @if($orders->isEmpty())
         <div id="ordersEmpty" class="mt-6 rounded-xl border border-dashed border-gray-300 bg-white p-8 text-center text-gray-600 ">
           <p class="font-extrabold text-emerald-900">No orders yet.</p>
           <p class="mt-2">Once customers checkout, their orders should appear here.</p>
         </div>
+        @endif
+        @foreach ($orders as $order)
+      @foreach($order->items as $item)
+        <div id="ordersList" class="mt-6 space-buffer-4">
+            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div class=" space-y-2">
+              <div class="text-2xl font-bold text-emerald-900">{{$item->product->name}}</div>
+              <div class="text-xl font-extrabold text-emerald-900">Quantity: {{$item->quantity}}</div>
+              <div class="mt-1 text-sm text-gray-600">Customer: <span class="font-bold">{{ $order->user->name }}</span></div>
+              <div class="mt-1 text-xs text-gray-500">Created: {{ $item->created_at }}</div>
+           </div>
 
-        <div id="ordersList" class="mt-6 space-y-4"></div>
+            <div class="text-right space-y-2">
+              <div class="inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-extrabold text-amber-800 border border-amber-200">{{$order->status}}</div>
+              <div class="mt-3 text-xs font-bold text-gray-500">Total</div>
+              <div class="text-2xl font-extrabold text-emerald-900">${{ $item->price_at_purchase * $item->quantity }}</div>
+                {{-- <form action="/cart/remove/{{$order->id}}" method="POST" class="mt-4">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-sm font-extrabold cursor-pointer text-red-500 underline">remove</button>
+                </form> --}}
+            </div>
+          </div>
+
+        </div>
+        @endforeach
+        @endforeach
+        </div>
       </section>
     </div>
   </main>

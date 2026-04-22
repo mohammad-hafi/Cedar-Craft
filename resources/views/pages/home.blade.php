@@ -15,9 +15,11 @@
 
     <div class="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 md:grid-cols-2">
       <div class="hero-left">
+        
         <h1 class="text-4xl font-extrabold leading-tight md:text-5xl">Welcome to Cedar Craft</h1>
+        
         <p class="mt-4 text-lg text-white/90">Discover premium handcrafted products with exceptional quality</p>
-        <a href="Pages/shop.html" class="mt-8 inline-block rounded-full bg-amber-400 px-10 py-4 text-sm font-extrabold uppercase tracking-wider text-emerald-950 shadow hover:bg-amber-300">
+        <a href="/shop" class="mt-8 inline-block rounded-full bg-amber-400 px-10 py-4 text-sm font-extrabold uppercase tracking-wider text-emerald-950 shadow hover:bg-amber-300">
           Shop Now
         </a>
       </div>

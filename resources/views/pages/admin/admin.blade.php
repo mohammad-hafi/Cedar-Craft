@@ -142,7 +142,8 @@
     </div>
     
   </div>
-  <form method="POST" action="/admin/{{ $design->id }}/status" class=" m-3 flex gap-3">
+</a>
+<form method="POST" action="/admin/{{ $design->id }}/status" class=" m-3 flex gap-3">
     @csrf
     @method('PATCH')
     
@@ -169,7 +170,6 @@
 </div>
 @endif
 @endforeach
-</a>
         </div>
       </section>
 

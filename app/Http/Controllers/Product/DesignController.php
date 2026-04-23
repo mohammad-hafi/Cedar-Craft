@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DesignRequest;
 use App\Models\Category;
 use App\Models\Design;
+use App\Models\DesignImages;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class DesignController extends Controller
 {
@@ -30,7 +32,7 @@ class DesignController extends Controller
     public function store(DesignRequest $request)
     {
         $design = Auth::user()->designs()->create([
-            'product_name' => $request->product_name,
+            'product_name' => $request->name,
             'description' => $request->description,
             'category_id' => $request->category,
             'material_id' => $request->material,
@@ -72,9 +74,35 @@ class DesignController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Design $design)
+    public function update(DesignRequest $request, Design $design)
     {
-        //
+        $design->update([
+            'product_name' => $request->name,
+            'description' => $request->description,
+            'category_id' => $request->category,
+            'material_id' => $request->material,
+            'dimentions' => $request->dimentions,
+            'estimated_price' => $request->price,
+     ]);
+     if($request->deleted_images){
+        $ids=explode(',',$request->deleted_images);
+        foreach($ids as $id){
+            $image=DesignImages::find($id);
+            if($image && $image->design_id === $design->id){
+                Storage::disk('public')->delete($image->image);
+                $image->delete();
+            }
+        }
+     }
+     if($request->hasFile('image')){
+        foreach($request->file('image') as $images){
+            $path=$images->store('designs','public');
+            $design->images()->create([
+                'image'=>$path,
+            ]);
+        }
+     }
+     return back()->with('success','Design updated successfully');
     }
 
     /**

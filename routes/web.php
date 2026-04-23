@@ -37,6 +37,7 @@ Route::delete('/logout',[LoginController::class,'destroy']);
 Route::get('/customize',[DesignController::class,'index']);
 Route::post('/customize',[DesignController::class,'store']);
 Route::delete('/customize/{design}',[DesignController::class,'destroy']);
+Route::put('/customize/update/{design}',[DesignController::class,'update']);
 Route::get('/cart',[OrderController::class,'index']);
 Route::delete('/cart/remove/{order}',[OrderController::class,'destroy']);
 Route::post('/shop/add/{product}',[ShopController::class,'store'])->name('product.add');

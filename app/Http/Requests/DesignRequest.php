@@ -23,12 +23,13 @@ class DesignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_name'=>['required','string','max:255'],
+            'name'=>['required','string','max:255'],
             'description'=>['required','string','min:3','max:1000'],
             'material'=>['required'],
             'dimentions'=>['required','string'],
+            'category'=>['required'],
             'price'=>['required','numeric','min:5'],
-            'image' => ['required', 'array'],
+            'image' => ['nullable', 'array'],
             'image.*' => ['image', 'mimes:jpg,png,jpeg,gif,svg']
 
         ];

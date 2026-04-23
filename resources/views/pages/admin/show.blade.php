@@ -86,7 +86,7 @@
 
                 <p class="mt-4 text-2xl font-semibold text-emerald-600">${{$design->estimated_price}}</p>
             </div>
-            <form method="POST" action="/admin/{{ $design->id }}/status" class=" m-3 flex gap-3">
+<form method="POST" action="/admin/{{ $design->id }}/status" class=" m-3 flex gap-3">
     @csrf
     @method('PATCH')
     

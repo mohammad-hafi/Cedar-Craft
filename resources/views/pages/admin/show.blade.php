@@ -7,7 +7,7 @@
         <!-- Product Image -->
         <div 
     x-data="{
-        images: @js($product->images->pluck('image')->map(fn($img) => asset('storage/' . $img))),
+        images: @js($design->images->pluck('image')->map(fn($img) => asset('storage/' . $img))),
         active: 0
     }"
     class="p-4"
@@ -76,27 +76,40 @@
         <!-- Product Info -->
         <div class="p-6 flex flex-col justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">{{$product->name}}</h1>
-                <p class="text-gray-500 mt-2">Material: {{$product->material->type}}</p>
-                <p class="text-gray-500">Dimensions: {{$product->dimentions}}</p>
+                <h1 class="text-3xl font-bold text-gray-800">{{$design->name}}</h1>
+                <p class="text-gray-500 mt-2">Material: {{$design->material->type}}</p>
+                <p class="text-gray-500">Dimensions: {{$design->dimentions}}</p>
 
                 <p class="mt-4 text-gray-700">
-                    {{$product->description}}
+                    {{$design->description}}
                 </p>
 
-                <p class="mt-4 text-2xl font-semibold text-emerald-600">${{$product->price}}</p>
+                <p class="mt-4 text-2xl font-semibold text-emerald-600">${{$design->estimated_price}}</p>
             </div>
-            <form x-data="{quantity:1}" action="{{ route('product.add',$product->id) }}" method="POST">
-                @csrf
-                @auth
-                <x-form.field x-model="quantity" label="Quantity" name="quantity" type="number" min="1"/>    
-                @endauth
-                <input type="hidden" name="product" value="{{ $product->id }}"/>
-                <input type="hidden" name="price" value="{{ $product->price }}"/>
-            <button class="w-full mt-6 bg-emerald-600 text-white py-2 px-4 rounded-xl hover:bg-emerald-700 transition">
-                Add to Cart
-            </button>
-        </form>
+            <form method="POST" action="/admin/{{ $design->id }}/status" class=" m-3 flex gap-3">
+    @csrf
+    @method('PATCH')
+    
+    <!-- ACCEPT -->
+    <button 
+    type="submit"
+    name="status"
+    value="Accepted"
+    class="flex-1 rounded-lg bg-emerald-600 px-2 py-2 font-bold text-white hover:bg-emerald-700 transition"
+    >
+    Accept
+  </button>
+  
+  <!-- REJECT -->
+  <button 
+  type="submit"
+  name="status"
+  value="Rejected"
+  class="flex-1 rounded-lg bg-red-600 px-2 py-2 font-bold text-white hover:bg-red-700 transition"
+  >
+  Reject
+</button>
+</form>
         </div>
     </div>
 

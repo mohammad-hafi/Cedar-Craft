@@ -160,7 +160,12 @@
 
     <x-form.field label="Dimentions*" name="dimentions" placeholder="Enter Your Product dimentions"/>
     <x-form.field label="Estimated Price $*" type="number" name="price" placeholder="Enter Your Product dimentions"/>
-
+      <label class="block font-semibold text-gray-800 mb-2">Category*</label>
+        <select name="category" id="category" class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
+      @foreach ($categories as $type)
+          <option value="{{ $type->id }}">{{$type->name}}</option>
+      @endforeach  
+    </select>
     <x-form.field label="Image*" name="image[]" type="file"   class="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 focus:outline-none" multiple/>
 
         <div class="sm:col-span-2 flex flex-col gap-3 sm:flex-row sm:justify-end">

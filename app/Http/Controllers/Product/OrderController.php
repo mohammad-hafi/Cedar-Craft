@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -62,13 +63,13 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order)
+    public function destroy(OrderItem $order)
     {
-         if($order->user_id !== Auth::id())
-    {
-        abort(403);
-    }
-        $order->items()->delete();
+        $order->delete();
+        $orders=$order->order;
+        if($orders->items()->count()===0){
+            $orders->delete();
+        }
         return redirect()->back();
     }
 }

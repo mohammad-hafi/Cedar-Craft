@@ -38,21 +38,35 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-
-       $request->validate([
+        $request->validate([
             'quantity'=>'required|integer|min:1',
             'product'=>'required|exists:products,id',
             'price'=>'required|numeric|min:0'
             ]);
-            $order= Order::create([
-                 'user_id'=>Auth::user()->id
-              ]);
-         $order->items()->create([
-            'product_id'=>$request->product,
-            'quantity'=>$request->quantity,
-            'price_at_purchase'=>$request->price * $request->quantity
+$user=Auth::user();
+$product=Product::findOrFail($request->product);
+$price=$product->price;
+$order=$user->orders()->firstOrCreate([
+    'user_id'=>$user->id,
+    'status'=>'Pending'
+]);
+    $item=$order->items()->where('product_id',$product->id)->first();
+    if($item){
+       $newQuantity=$item->quantity + $request->quantity;
+         $item->update([
+            'quantity'=>$newQuantity,
+            'price_at_purchase'=>$price * $newQuantity
          ]);
-         return redirect()->route('shop.show',$request->product);
+        return redirect()->route('shop.show',$request->product)->with('success','Product quantity updated in cart successfully');
+    }else{
+        $order->items()->create([
+            'product_id'=>$product->id,
+            'quantity'=>$request->quantity,
+            'price_at_purchase'=>$price * $request->quantity
+        ]);
+        return redirect()->route('shop.show',$request->product)->with('success','Product added to cart successfully');
+        }
+    
     }
 
     /**
@@ -76,33 +90,7 @@ class ShopController extends Controller
      */
     public function update(UpdateProduct $request, Product $product)
     {
-     $product->update([
-            'name'=>$request->name,
-            'description'=>$request->description,
-            'material_id'=>$request->material,
-            'price'=>$request->price,
-            'stock'=>$request->stock,
-            'dimentions'=>$request->dimentions
-     ]);
-     if($request->deleted_images){
-        $ids=explode(',',$request->deleted_images);
-        foreach($ids as $id){
-            $image=ProductImages::find($id);
-            if($image && $image->product_id == $product->id){
-                Storage::disk('public')->delete($image->image);
-                $image->delete();
-            }
-        }
-     }
-     if($request->hasFile('images')){
-        foreach($request->file('images') as $images){
-            $path=$images->store('products','public');
-            $product->images()->create([
-                'image'=>$path,
-            ]);
-        }
-     }
-     return back()->with('success','Product updated successfully');
+    
     }
 
     /**
@@ -110,15 +98,6 @@ class ShopController extends Controller
      */
     public function destroy(Product $product)
     {
-        if(!auth()->user()->is_admin()){
-            abort(403);
-        }
-        foreach($product->images as $image){
-            Storage::disk('public')->delete($image->image);
-            $image->delete();
-        }
-        $product->orderitems()->delete();
-        $product->delete();
-        return back()->with('success','Product deleted successfully');
+        
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->foreignId('material_id')->constrained()->cascadeOnDelete();
             $table->integer('stock')->default(0);
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->integer('price');
             $table->string('dimentions')->nullable();
             $table->timestamps();

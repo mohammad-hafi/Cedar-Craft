@@ -15,9 +15,10 @@ Route::get('/about',[PageController::class,'about']);
 Route::middleware('admin')->group(function () {
 Route::get('/admin',[AdminController::class,'index']);
 Route::post('/admin',[AdminController::class,'store']);
-Route::put('/admin/products/{product}',[ShopController::class,'update']);
-Route::delete('/admin/products/{product}',[ShopController::class,'destroy']);
+Route::put('/admin/products/{product}',[AdminController::class,'updateShop']);
+Route::delete('/admin/products/{product}',[AdminController::class,'destroy']);
 Route::patch('/admin/{design}/status',[AdminController::class,'update']);
+Route::get('/admin/custom/{design}',[AdminController::class,'show']);
 });
 
 Route::get('/shop/show/{product}',[ShopController::class,'show'])->name('shop.show');

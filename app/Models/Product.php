@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-     protected $fillable = ['name', 'description','material_id', 'price', 'stock', 'dimentions'];
+     protected $fillable = ['name', 'description','material_id','category_id', 'price', 'stock', 'dimentions'];
 
      public function images():HasMany
      {
@@ -21,4 +21,8 @@ class Product extends Model
         {
             return $this->belongsTo(Material::class);
         }
+         public function category()
+         {
+               return $this->belongsTo(Category::class);
+         }
 }

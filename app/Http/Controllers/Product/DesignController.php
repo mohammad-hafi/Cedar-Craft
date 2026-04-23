@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DesignRequest;
+use App\Models\Category;
 use App\Models\Design;
 use App\Models\Material;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class DesignController extends Controller
         return view('pages.customize',[
             'designs'=>Auth::user()->designs,
             'materials'=>Material::all(),
+            'categories'=>Category::all()
         ]);
     }
 
@@ -30,6 +32,7 @@ class DesignController extends Controller
         $design = Auth::user()->designs()->create([
             'product_name' => $request->product_name,
             'description' => $request->description,
+            'category_id' => $request->category,
             'material_id' => $request->material,
             'dimentions' => $request->dimentions,
             'estimated_price' => $request->price,

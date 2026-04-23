@@ -29,8 +29,8 @@
             <div class="text-right space-y-2">
               <div class="inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-extrabold text-amber-800 border border-amber-200">{{$order->status}}</div>
               <div class="mt-3 text-xs font-bold text-gray-500">Total</div>
-              <div class="text-2xl font-extrabold text-emerald-900">${{ $item->price_at_purchase * $item->quantity }}</div>
-                <form action="/cart/remove/{{$order->id}}" method="POST" class="mt-4">
+              <div class="text-2xl font-extrabold text-emerald-900">${{ $item->price_at_purchase}}</div>
+                <form action="/cart/remove/{{$item->id}}" method="POST" class="mt-4">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="text-sm font-extrabold cursor-pointer text-red-500 underline">remove</button>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('product_name');
             $table->string('dimentions');
             $table->string('description');
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->foreignId('material_id')->constrained()->cascadeOnDelete();
             $table->string('status')->default('pending');
             $table->integer('estimated_price');

@@ -15,6 +15,8 @@ Route::get('/about',[PageController::class,'about']);
 Route::middleware('admin')->group(function () {
 Route::get('/admin',[AdminController::class,'index']);
 Route::post('/admin',[AdminController::class,'store']);
+Route::post('/admin/category',[AdminController::class,'createCategory']);
+Route::post('/admin/material',[AdminController::class,'createMaterial']);
 Route::put('/admin/products/{product}',[AdminController::class,'updateShop']);
 Route::delete('/admin/products/{product}',[AdminController::class,'destroy']);
 Route::patch('/admin/{design}/status',[AdminController::class,'update']);

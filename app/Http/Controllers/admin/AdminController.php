@@ -61,7 +61,11 @@ class AdminController extends Controller
                 ]);
             }
         }
-        return back();
+        return response()->json([
+            'success'=>true,
+            'message'=>'Product created successfully',
+            'data'=>$product->load('images')
+        ]);
     }
 
     /**
@@ -143,5 +147,40 @@ class AdminController extends Controller
         $product->orderitems()->delete();
         $product->delete();
         return back()->with('success','Product deleted successfully');
+    }
+
+    public function createCategory(Request $request){
+        $request->validate([
+        'categories'=>['required']
+        ]);
+       $category= Category::create(
+        [
+            'name'=>$request->categories,
+        ]
+       );
+        return response()->json([
+            'success'=>true,
+            'message'=>'Category created successfully',
+            'data'=>$category
+        ]);
+    }
+    public function createMaterial(Request $request){
+        $request->validate([
+            'materials'=>['required']
+        ]);
+        $material=Material::create([
+            'type'=>$request->materials,
+        ]);
+        
+        // Return JSON for AJAX requests, redirect for form submissions
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Material created successfully',
+                'data' => $material
+            ]);
+        }
+        
+        return back()->with('success', 'Material created successfully');
     }
 }

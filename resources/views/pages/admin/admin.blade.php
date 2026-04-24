@@ -180,7 +180,7 @@
             <h2 class="text-2xl font-extrabold text-emerald-900">Add New Product</h2>
           </div>
         </div>
-        <form action="/admin" method="POST" enctype="multipart/form-data" id="newProductForm" class="mt-6 grid grid-cols-1 gap-5 rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:grid-cols-2">
+        <form action="/admin" method="POST" id="productForm" enctype="multipart/form-data" class="mt-6 grid grid-cols-1 gap-5 rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:grid-cols-2">
           @csrf
             <div class="sm:col-span-2 space-y-6">
         <x-form.field label="Product Name*" name="name"/>
@@ -211,21 +211,22 @@
           </div>
 
           <div class="sm:col-span-2 flex flex-col gap-3 sm:flex-row sm:justify-end">
-    <button type="submit" class="w-full rounded-lg bg-emerald-900 px-6 py-3 font-extrabold text-white hover:bg-emerald-950 sm:w-auto">Save Product</button>
+    <button type="button" onclick="storeProduct()" class="w-full rounded-lg bg-emerald-900 px-6 py-3 font-extrabold text-white hover:bg-emerald-950 sm:w-auto">Save Product</button>
           </div>
         </form>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
   <!-- Material Form -->
-  <form action="/admin/material" method="POST" class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm space-y-4">
-    @csrf
+  <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm space-y-4">
 
     <h3 class="text-sm font-semibold text-gray-800">Add Material</h3>
 
     <div x-data="{ material: '' }">
       <x-form.field 
         label="Material Name" 
-        name="material"
+        name="materials"
+        id="materials"
+        value=""
         placeholder="e.g. Wood"
         x-model="material"
         class="focus:ring-2 focus:ring-emerald-600"
@@ -239,25 +240,29 @@
           Cancel
         </button>
 
-        <button 
-          type="submit"
+        <button
+         @click="material = ''"
+          onclick="storeMaterial()"
+          type="button"
           class="rounded-md bg-emerald-700 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-800">
           Save
         </button>
       </div>
     </div>
-  </form>
+  </div>
 
   <!-- Category Form -->
-  <form action="/admin/category" method="POST" class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm space-y-4">
-    @csrf
+  <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm space-y-4">
+  
 
     <h3 class="text-sm font-semibold text-gray-800">Add Category</h3>
 
     <div x-data="{ category: '' }">
       <x-form.field 
         label="Category Name" 
-        name="category"
+        name="categories"
+        id="categories"
+        value=""
         placeholder="e.g. Furniture"
         x-model="category"
         class="focus:ring-2 focus:ring-emerald-600"
@@ -272,13 +277,15 @@
         </button>
 
         <button 
-          type="submit"
+        @click="category = ''"
+          type="button"
+          onclick="storeCategory()"
           class="rounded-md bg-emerald-700 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-800">
           Save
         </button>
       </div>
     </div>
-  </form>
+  </div>
 
 </div>
 

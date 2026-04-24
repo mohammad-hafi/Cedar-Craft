@@ -10,7 +10,6 @@ export function storeCategory() {
 
         const newCat = res.data.data;
 
-        // 👇 ADD NEW OPTION WITHOUT REFRESH
         const select = document.getElementById('category');
 
         const option = document.createElement('option');

@@ -13,8 +13,8 @@ Route::get('/',[PageController::class,'home']);
 Route::get('/about',[PageController::class,'about']); 
 
 Route::middleware('admin')->group(function () {
-Route::get('/admin',[AdminController::class,'index']);
-Route::post('/admin',[AdminController::class,'store']);
+    Route::get('/admin',[AdminController::class,'index']);
+    Route::post('/admin',[AdminController::class,'store']);
 Route::post('/admin/category',[AdminController::class,'createCategory']);
 Route::post('/admin/material',[AdminController::class,'createMaterial']);
 Route::put('/admin/products/{product}',[AdminController::class,'updateShop']);
@@ -27,6 +27,7 @@ Route::get('/shop/show/{product}',[ShopController::class,'show'])->name('shop.sh
 Route::get('/shop',[ShopController::class,'index']);
 Route::get('/shop',[ShopController::class,'filter']);
 Route::get('/search-products', [ShopController::class, 'search']);
+Route::delete('/logout',[LoginController::class,'destroy'])->middleware('auth');
 
 Route::middleware('guest')->group(function(){
 Route::get('/signup',[SignupUser::class,'create']);
@@ -35,8 +36,7 @@ Route::get('/login',[LoginController::class,'create'])->name('login');
 Route::post('/login',[LoginController::class,'store']);    
     });
     
-Route::middleware('auth')->group(function(){
-Route::delete('/logout',[LoginController::class,'destroy']);
+Route::middleware(['customer'])->group(function(){
 Route::get('/customize',[DesignController::class,'index']);
 Route::post('/customize',[DesignController::class,'store']);
 Route::delete('/customize/{design}',[DesignController::class,'destroy']);

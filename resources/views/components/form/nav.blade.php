@@ -13,6 +13,7 @@
   ];
   $adminlinks=[
     ['href'=>'/','label'=>'Home'],
+    ['href'=>'/about','label'=>'About'],
     ['href'=>'/shop','label'=>'My Shop'],
     ['href'=>'/admin','label'=>'Admin'],
   ];

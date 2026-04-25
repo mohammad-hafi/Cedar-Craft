@@ -101,37 +101,15 @@
     </div>
 
     <!-- Compatible Designs -->
-    {{-- <div class="mt-10">
+    <div class="mt-10">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Compatible Designs</h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
-            <!-- Design Card -->
-            <div class="bg-white shadow-md rounded-xl overflow-hidden">
-                <img src="design1.jpg" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg">Design Name</h3>
-                    <p class="text-gray-500 text-sm mt-1">Short design description</p>
-                    <button class="mt-3 w-full bg-amber-500 text-white py-1 rounded-lg hover:bg-amber-600">
-                        Apply Design
-                    </button>
-                </div>
-            </div>
-
-            <!-- Repeat Design -->
-            <div class="bg-white shadow-md rounded-xl overflow-hidden">
-                <img src="design2.jpg" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg">Design Name</h3>
-                    <p class="text-gray-500 text-sm mt-1">Short design description</p>
-                    <button class="mt-3 w-full bg-amber-500 text-white py-1 rounded-lg hover:bg-amber-600">
-                        Apply Design
-                    </button>
-                </div>
-            </div>
+            @include('partials.productgrid',['products'=>$products])
 
         </div>
-    </div> --}}
+    </div>
 
 </div>
 </x-layout>

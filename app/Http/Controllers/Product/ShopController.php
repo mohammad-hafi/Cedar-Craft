@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\UpdateProduct;
+use App\Models\Category;
 use App\Models\Material;
 use App\Models\Order;
 use App\Models\Product;
@@ -21,7 +22,8 @@ class ShopController extends Controller
     public function index()
     {
         return view('pages.shop.shop',['products'=>Product::all(),
-        'materials'=>Material::all()
+        'materials'=>Material::all(),
+        'categories'=>Category::all()
         ]);
     }
 
@@ -74,15 +76,39 @@ $order=$user->orders()->firstOrCreate([
      */
     public function show(Product $product)
     {
-        return view('pages.shop.show',['product'=>$product]);
+        $query=Product::query();
+        $query->where('name','like','%123');
+        $products=$query->with(['images','category','material'])->except($product)->get();
+        return view('pages.shop.show',['product'=>$product,
+        'products'=>$products
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function filter(Request $request)
     {
-        //
+        $query=Product::query();
+        if($request->filled('cat')){
+            $query->where('category_id',$request->cat);
+        }
+        if($request->filled('mat')){
+            $query->where('material_id',$request->mat);
+        }
+        if ($request->filled('min_price')) {
+        $query->where('price', '>=', $request->min_price);
+    }
+
+    if ($request->filled('max_price')) {
+        $query->where('price', '<=', $request->max_price);
+    }
+        $products=$query->with(['images','category','material'])->get();
+           return view('pages.shop.shop', [
+        'products' => $products,
+        'materials' => Material::all(),
+        'categories' => Category::all()
+    ]);
     }
 
     /**
@@ -96,8 +122,15 @@ $order=$user->orders()->firstOrCreate([
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function search(Request $request)
     {
-        
+        $query=Product::with('images');
+
+        if($request->filled('search')){
+            $query->where('name','like',$request->search.'%');
+        }
+        $products=$query->get();
+        return view('partials.productgrid',['products' => $products])->render();
     }
+ 
 }

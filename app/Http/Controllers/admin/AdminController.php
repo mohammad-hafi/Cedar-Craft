@@ -108,6 +108,7 @@ class AdminController extends Controller
             'name'=>$request->name,
             'description'=>$request->description,
             'material_id'=>$request->material,
+            'category_id'=>$request->category,
             'price'=>$request->price,
             'stock'=>$request->stock,
             'dimentions'=>$request->dimentions
@@ -172,15 +173,12 @@ class AdminController extends Controller
             'type'=>$request->materials,
         ]);
         
-        // Return JSON for AJAX requests, redirect for form submissions
-        if ($request->wantsJson()) {
-            return response()->json([
+      return response()->json([
                 'success' => true,
                 'message' => 'Material created successfully',
                 'data' => $material
             ]);
         }
         
-        return back()->with('success', 'Material created successfully');
     }
-}
+

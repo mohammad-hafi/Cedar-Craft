@@ -1,137 +1,91 @@
 <x-layout>
     
   <section x-data="{update:false,product:{}}" class="relative min-h-screen bg-amber-50 px-4 py-10">
-    <div class="mx-auto max-w-7xl">
+    <div class="mx-auto max-w-[1800px]">
       <div class="rounded-xl bg-white p-8 shadow">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 class="text-3xl font-extrabold text-emerald-900">Products</h1>
           </div>
         </div>
-        <!-- Products grid -->
-<div id="productsGrid" class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
- @foreach($products as $product)
-@if(!auth()->check() || !auth()->user()->is_admin())
-<a href="{{ route('shop.show', $product->id) }}">
-@endif 
-<div class="group rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-lg transition overflow-hidden">
+        
+        
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <!-- FILTER SIDEBAR -->
+          <div class="lg:col-span-1">
 
-  <!-- IMAGE SLIDER -->
-  <div class="relative h-60 bg-gray-100 overflow-hidden"
-       x-data="{
-        index: 0,
-        images: @js($product->images->pluck('image')),
-       }">
+  <h2 class="text-xl font-bold text-emerald-900 mb-4">Filter</h2>
 
-    <!-- Images -->
-    <template x-for="(img, i) in images" :key="i">
-      <img 
-        x-show="index === i"
-        x-transition.opacity
-        :src="'/storage/' + img"
-        class="absolute inset-0 w-full h-full object-cover"
-      >
-    </template>
-    <!-- Category Badge -->
-    <div class="absolute top-3 left-3">
-      <span class="px-3 py-1 text-xs font-semibold bg-emerald-600 text-white rounded-full shadow">
-        {{ $product->category->name ?? 'Uncategorized' }}
-      </span>
+  <form method="GET" action="" class="space-y-6">
+    <!-- CATEGORY -->
+    <div>
+      <label class="text-sm font-semibold text-gray-600">Category</label>
+      <select name="cat" class="w-full mt-2 border rounded-lg p-2">
+        <option value="">All</option>
+        @foreach($categories as $category)
+          <option value="{{ $category->id }}"
+            {{ request('cat') == $category->id ? 'selected' : '' }}>
+            {{ $category->name }}
+          </option>
+        @endforeach
+      </select>
     </div>
-  </div>
-
-  <!-- CONTENT -->
-  <div class="p-6">
-
-    <!-- Title + Price -->
-    <div class="flex items-start justify-between gap-4">
-      <h3 class="text-lg font-bold text-gray-900 leading-snug">
-        {{ $product->name }}
-      </h3>
-
-      <span class="text-xl font-bold text-emerald-700 whitespace-nowrap">
-        ${{ $product->price }}
-      </span>
+    <!-- material -->
+    <div>
+      <label class="text-sm font-semibold text-gray-600">Material</label>
+      <select name="mat" class="w-full mt-2 border rounded-lg p-2">
+        <option value="">All</option>
+        @foreach($materials as $material)
+        <option value="{{ $material->id }}"
+          {{ request('mat') == $material->id ? 'selected' : '' }}>
+          {{ $material->type }}
+        </option>
+        @endforeach
+      </select>
     </div>
 
-    <!-- Description -->
-    <p class="mt-3 text-sm text-gray-600 line-clamp-2">
-      {{ $product->description }}
-    </p>
+    <!-- PRICE RANGE -->
 
-    <!-- Divider -->
-    <div class="my-4 border-t"></div>
+    <div x-data="{min: 0, max: 1000}">
+<input type="range" min="0" max="1000" x-model="min" class="w-full accent-yellow-500">
+<input type="range" min="0" max="1000" x-model="max" class="w-full accent-yellow-500">
 
-    <!-- Details -->
-    <div class="grid grid-cols-2 gap-4 text-sm">
+<p x-text="min + ' - ' + max"></p>
 
-      <div>
-        <p class="text-gray-400 text-xs">Material</p>
-        <p class="font-medium text-gray-800">
-          {{ $product->material->type ?? 'No material' }}
-        </p>
-      </div>
+<input type="hidden" name="min_price" :value="min">
+<input type="hidden" name="max_price" :value="max">
+</div>
 
-      <div>
-        <p class="text-end text-gray-400 text-xs">Dimensions</p>
-        <p class="text-end font-medium text-gray-800">
-          {{ $product->dimentions }}
-        </p>
-      </div>
-
-      <div>
-        <p class="text-gray-400 text-xs">Stock</p>
-        <p class="font-medium text-gray-800">
-          {{ $product->stock }}
-        </p>
-      </div>
-
-    </div>
-    
-    @admin
-  <div class="flex items-center mt-2 gap-3">
-  
-  <button
-    @click="
-      update = true;
-      product = @js($product);
-      product.toDelete = [];
-      product.newImages = [];
-      product.previewNew = [];
-    "
-    class="w-full rounded-lg bg-emerald-900 px-4 py-3 font-semibold text-white hover:bg-emerald-800 transition"
-  >
-    Update Product
+<!-- BUTTONS -->
+<div class="flex flex-col gap-2">
+  <button type="submit" class="bg-emerald-900 text-white py-2 rounded-lg">
+    Apply Filters
   </button>
   
-  <form action="/admin/products/{{ $product->id }}" method="POST">
-    @csrf
-    @method('DELETE')
-  
-    <button 
-      type="submit"
-      class="rounded-lg bg-red-100 p-3 text-red-700 hover:bg-red-200 transition"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" 
-           class="h-6 w-6" 
-           fill="none" 
-           viewBox="0 0 24 24" 
-           stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-              d="M19 7l-1 12a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7m5-3h4m-7 3h10" />
-      </svg>
-    </button>
-  
-  </form>
-  
-  </div>
-    @endadmin
-  </div>
+  <a href="/shop" class="text-center border py-2 rounded-lg">
+    Reset
+  </a>
 </div>
-    </a>
 
-@endforeach
-@admin
+</form>
+</div>
+<div class="lg:col-span-3">
+          <input
+          type="text"
+          id="searchInput"
+          placeholder="Search products..."
+          class="w-full border rounded-lg p-3 mb-6"
+          />
+<div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+  @include('partials.productgrid',['products'=>$products])
+    </div>
+      <!-- End inner grid -->
+    </div>
+    <!-- End card -->
+  </div>
+  <!-- End outer container -->
+
+  @admin
 <div x-show="update" id="customModal"  class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" x-transition>
   <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl">
     <div 
@@ -149,6 +103,12 @@
         <x-form.field label="Product Name*" name="name" x-model="product.name"/>
         <x-form.field type="number" label="Price*" name="price" x-model="product.price"/>
         <x-form.field type="number" label="Stock*" name="stock" x-model="product.stock"/>
+        <label class="block font-semibold text-gray-800 mb-2">Category*</label>
+    <select x-model="design.category" name="category" id="material" class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
+      @foreach ($categories as $type)
+          <option value="{{ $type->id }}">{{$type->name}}</option>
+      @endforeach  
+    </select> 
         <x-form.field x-model="product.dimentions" label="Dimensions*" name="dimentions" placeholder="Enter product dimensions"/>
      <label class="block font-semibold text-gray-800 mb-2">Material*</label>
     <select x-model="product.material" name="material" id="material" class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
@@ -225,8 +185,8 @@
   
   </div> 
   @endadmin
-        </div>
-    </div>
+</div>
+      </div>
     </div>
   </section>
 <x-form.footer/>

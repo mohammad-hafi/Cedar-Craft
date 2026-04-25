@@ -25,7 +25,8 @@ Route::get('/admin/custom/{design}',[AdminController::class,'show']);
 
 Route::get('/shop/show/{product}',[ShopController::class,'show'])->name('shop.show');
 Route::get('/shop',[ShopController::class,'index']);
-
+Route::get('/shop',[ShopController::class,'filter']);
+Route::get('/search-products', [ShopController::class, 'search']);
 
 Route::middleware('guest')->group(function(){
 Route::get('/signup',[SignupUser::class,'create']);

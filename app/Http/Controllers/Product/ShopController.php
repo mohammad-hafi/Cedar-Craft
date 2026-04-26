@@ -19,12 +19,30 @@ class ShopController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('pages.shop.shop',['products'=>Product::all(),
-        'materials'=>Material::all(),
-        'categories'=>Category::all()
-        ]);
+          $query=Product::query();
+        if($request->filled('cat')){
+            $query->where('category_id',$request->cat);
+        }
+        if($request->filled('mat')){
+            $query->where('material_id',$request->mat);
+        }
+        if ($request->filled('min_price')) {
+        $query->where('price', '>=', $request->min_price);
+    }
+
+    if ($request->filled('max_price')) {
+        $query->where('price', '<=', $request->max_price);
+    }
+          $products = $query->with(['images','category','material'])
+        ->paginate(3)
+        ->withQueryString();
+           return view('pages.shop.shop', [
+        'products' => $products,
+        'materials' => Material::all(),
+        'categories' => Category::all()
+    ]);
     }
 
     /**
@@ -87,29 +105,6 @@ $order=$user->orders()->firstOrCreate([
     /**
      * Show the form for editing the specified resource.
      */
-    public function filter(Request $request)
-    {
-        $query=Product::query();
-        if($request->filled('cat')){
-            $query->where('category_id',$request->cat);
-        }
-        if($request->filled('mat')){
-            $query->where('material_id',$request->mat);
-        }
-        if ($request->filled('min_price')) {
-        $query->where('price', '>=', $request->min_price);
-    }
-
-    if ($request->filled('max_price')) {
-        $query->where('price', '<=', $request->max_price);
-    }
-        $products=$query->with(['images','category','material'])->get();
-           return view('pages.shop.shop', [
-        'products' => $products,
-        'materials' => Material::all(),
-        'categories' => Category::all()
-    ]);
-    }
 
     /**
      * Update the specified resource in storage.
@@ -127,9 +122,9 @@ $order=$user->orders()->firstOrCreate([
         $query=Product::with('images');
 
         if($request->filled('search')){
-            $query->where('name','like',$request->search.'%');
+            $query->where('name','like','%'.$request->search.'%');
         }
-        $products=$query->get();
+        $products = $query->paginate(3)->withQueryString();
         return view('partials.productgrid',['products' => $products])->render();
     }
  

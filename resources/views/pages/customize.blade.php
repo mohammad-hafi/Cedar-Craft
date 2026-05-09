@@ -304,5 +304,50 @@
   
   </div> 
 </div>
+<div x-data="{ chatOpen: false }">
+
+  <!-- Floating Button -->
+  <button 
+    @click="chatOpen = !chatOpen"
+    class="fixed bottom-6 right-6 bg-yellow-500 text-white p-4 rounded-full shadow-xl hover:bg-emerald-800 transition z-50"
+  >
+    💬
+  </button>
+
+  <!-- Chat Box -->
+  <div 
+    x-show="chatOpen"
+    x-transition
+    class="fixed bottom-20 right-6 w-80 bg-white rounded-2xl shadow-2xl border z-50 flex flex-col"
+  >
+
+    <!-- Header -->
+    <div class="bg-emerald-900 text-white p-3 rounded-t-2xl flex justify-between items-center">
+      <span class="font-bold">Chat</span>
+      <button @click="chatOpen = false">✕</button>
+    </div>
+
+    <!-- Messages -->
+    <div class="p-3 h-64 overflow-y-auto space-y-2">
+      <template x-for="msg in messages" :key="msg.id">
+        <div class="text-sm p-2 rounded bg-gray-100">
+          <span x-text="msg.text"></span>
+        </div>
+      </template>
+    </div>
+
+    <!-- Input -->
+    <form @submit.prevent="sendMessage" class="flex border-t">
+      <input 
+        x-model="newMessage"
+        type="text"
+        placeholder="Type a message..."
+        class="flex-1 p-2 outline-none"
+      >
+      <button class="px-4 bg-emerald-900 text-white">Send</button>
+    </form>
+
+  </div>
+</div>
  <x-form.footer/>
 </x-layout>

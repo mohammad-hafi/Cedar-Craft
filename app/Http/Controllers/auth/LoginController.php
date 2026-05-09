@@ -28,6 +28,9 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
+        if (auth()->check() && auth()->user()->is_admin()) {
+       return redirect('/admin/home')->with('success', "welcome back ".Auth::user()->name);
+   }
         return redirect('/')->with('success', "welcome back ".Auth::user()->name);
     }
 

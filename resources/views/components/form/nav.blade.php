@@ -22,8 +22,8 @@
 <nav class="sticky top-0 z-50 border-b-4 border-amber-400 bg-gradient-to-br from-emerald-900 to-emerald-950 shadow-lg">
     <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
       <a href="/" class="flex items-center gap-3 text-white transition hover:text-amber-300">
-        <span class="text-3xl">🌲</span>
-        <span class="text-xl font-extrabold tracking-wide">Cedar Craft</span>
+        <img src="{{ asset('storage/' . setting('logo')) }}" class="text-3xl w-20 h-15"/>
+        <span class="text-xl font-extrabold tracking-wide">{{setting('website_name')}}</span>
       </a>
 
       <div class="hidden items-center md:flex">

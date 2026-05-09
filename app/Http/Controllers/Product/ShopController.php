@@ -94,12 +94,39 @@ $order=$user->orders()->firstOrCreate([
      */
     public function show(Product $product)
     {
-        $query=Product::query();
-        $query->where('name','like','%123');
-        $products=$query->with(['images','category','material'])->except($product)->get();
-        return view('pages.shop.show',['product'=>$product,
-        'products'=>$products
+        $compatibilityCode = $this->getCompatibilityCode($product);
+
+        $products = collect();
+
+        if ($compatibilityCode) {
+            $products = Product::with(['images','category','material'])
+                ->where('id', '!=', $product->id)
+                ->where(function ($query) use ($compatibilityCode) {
+                    $query->where('name', 'like', "%{$compatibilityCode}%")
+                          ->orWhere('description', 'like', "%{$compatibilityCode}%");
+                })
+                ->get();
+        }
+
+        return view('pages.shop.show', [
+            'product' => $product,
+            'products' => $products,
         ]);
+    }
+
+    protected function getCompatibilityCode(Product $product): ?string
+    {
+        $haystack = trim($product->name . ' ' . $product->description);
+
+        if (preg_match('/\b\d{2,}\b/', $haystack, $matches)) {
+            return $matches[0];
+        }
+
+        if (preg_match('/\b[A-Z]{2,}\d*\b/', $haystack, $matches)) {
+            return $matches[0];
+        }
+
+        return null;
     }
 
     /**

@@ -101,6 +101,8 @@
     </div>
 
     <!-- Compatible Designs -->
+    @if($products->isNotEmpty())
+
     <div class="mt-10">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Compatible Designs</h2>
 
@@ -110,6 +112,6 @@
 
         </div>
     </div>
-
+    @endif
 </div>
 </x-layout>

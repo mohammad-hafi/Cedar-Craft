@@ -11,10 +11,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/',[PageController::class,'home']);
 Route::get('/about',[PageController::class,'about']); 
+Route::get('/shop/show/{product}',[ShopController::class,'show'])->name('shop.show');
+Route::get('/shop',[ShopController::class,'index']);
+Route::get('/search-products', [ShopController::class, 'search']);
+Route::delete('/logout',[LoginController::class,'destroy'])->middleware('auth');
+Route::post('/shop/add/{product}',[ShopController::class,'store'])->middleware('auth')->name('product.add');
 
 Route::middleware('admin')->group(function () {
-    Route::get('/admin',[AdminController::class,'index']);
-    Route::post('/admin',[AdminController::class,'store']);
+Route::get('/admin/home',[PageController::class,'create']);
+Route::post('/new',[PageController::class,'store']);
+Route::get('/admin',[AdminController::class,'index']);
+Route::post('/admin',[AdminController::class,'store']);
 Route::post('/admin/category',[AdminController::class,'createCategory']);
 Route::post('/admin/material',[AdminController::class,'createMaterial']);
 Route::put('/admin/products/{product}',[AdminController::class,'updateShop']);
@@ -23,10 +30,6 @@ Route::patch('/admin/{design}/status',[AdminController::class,'update']);
 Route::get('/admin/custom/{design}',[AdminController::class,'show']);
 });
 
-Route::get('/shop/show/{product}',[ShopController::class,'show'])->name('shop.show');
-Route::get('/shop',[ShopController::class,'index']);
-Route::get('/search-products', [ShopController::class, 'search']);
-Route::delete('/logout',[LoginController::class,'destroy'])->middleware('auth');
 
 Route::middleware('guest')->group(function(){
 Route::get('/signup',[SignupUser::class,'create']);
@@ -42,5 +45,4 @@ Route::delete('/customize/{design}',[DesignController::class,'destroy']);
 Route::put('/customize/update/{design}',[DesignController::class,'update']);
 Route::get('/cart',[OrderController::class,'index']);
 Route::delete('/cart/remove/{order}',[OrderController::class,'destroy']);
-Route::post('/shop/add/{product}',[ShopController::class,'store'])->name('product.add');
  });

@@ -15,8 +15,8 @@ public function home()
     $logo = Home::where('attribute', 'logo')->value('value');
 
     $productIds = json_decode(
-        Home::where('attribute', 'featured_products')->value('value')
-    );
+        Home::where('attribute', 'featured_products')->value('value'),true
+    )?? [];
 
     $products = Product::whereIn('id', $productIds)->get();
 

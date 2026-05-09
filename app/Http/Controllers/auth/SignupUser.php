@@ -32,7 +32,9 @@ class SignupUser extends Controller
             'address'=>$request->address,
         ]);
         Auth::login($user);
-
+      if (auth()->check() && auth()->user()->is_admin()) {
+       return redirect('/admin/home')->with('success', "welcome back ".Auth::user()->name);
+   }
         return redirect('/')->with('success','Welcome to Cedar Craft');
     }
 

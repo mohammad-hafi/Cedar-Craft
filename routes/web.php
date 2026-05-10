@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupUser;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Product\DesignController;
 use App\Http\Controllers\Product\OrderController;
@@ -16,6 +17,12 @@ Route::get('/shop',[ShopController::class,'index']);
 Route::get('/search-products', [ShopController::class, 'search']);
 Route::delete('/logout',[LoginController::class,'destroy'])->middleware('auth');
 Route::post('/shop/add/{product}',[ShopController::class,'store'])->middleware('auth')->name('product.add');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/chat/users', [ChatController::class, 'users']);
+    Route::get('/chat/messages/{id}', [ChatController::class, 'messages']);
+    Route::post('/chat/send', [ChatController::class, 'send']);
+});
 
 Route::middleware('admin')->group(function () {
 Route::get('/admin/home',[PageController::class,'create']);

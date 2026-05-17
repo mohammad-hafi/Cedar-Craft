@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,11 @@ class OrderController extends Controller
     public function index()
     {
         return view('pages/order',[
-            'orders'=>Auth::user()->orders,
+            'orders' => Auth::user()
+                ->orders()
+                ->orderByRaw("CASE WHEN status = 'Pending' THEN 0 ELSE 1 END")
+                ->orderByDesc('created_at')
+                ->get(),
         ]);
     }
 
@@ -39,9 +44,17 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function delivery(Order $order)
     {
-        //
+        $order->status=Status::DELIVERY;
+        $order->save();
+
+        return response()->json(
+            [
+                'success'=>true,
+                'status'=>$order->status
+            ]
+        );
     }
 
     /**
@@ -57,19 +70,21 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        $order->update([
+            'status'=>Status::PAID,
+        ]);
+        return redirect()->back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(OrderItem $order)
+    public function destroy(OrderItem $order,Request $request)
     {
-        $order->delete();
-        $orders=$order->order;
-        if($orders->items()->count()===0){
-            $orders->delete();
-        }
-        return redirect()->back();
+        $order->update([
+            'soft_delete'=>$request->soft_delete,
+        ]);
+       
+        return redirect()->back()->with('success','Product removed from cart successfully');
     }
 }

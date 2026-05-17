@@ -26,6 +26,7 @@
 <div id="customGrid" class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
 @foreach($designs as $design)
+@if($design->soft_delete != 1)
 <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
 
   <!-- IMAGE SLIDER -->
@@ -101,11 +102,12 @@
     </p>
 
     <div class="mt-4 text-2xl font-extrabold text-emerald-900">
-      ${{ $design->estimated_price }}
+      {{"$".$design->estimated_price ?? "$$$" }}
     </div>
 
     <div class="flex items-center mt-3 gap-3">
-    
+    @if(strtolower($design->status->value) === 'pending' || strtolower($design->status->value) === 'rejected')
+
     <button
       @click="
         update = true;
@@ -118,11 +120,10 @@
     >
       Update Design
     </button>
-    
     <form action="/customize/{{ $design->id }}" method="POST">
       @csrf
-      @method('DELETE')
-    
+      @method('PATCH')
+      <input type="hidden" name="soft_delete" value="1"/>
       <button 
         type="submit"
         class="rounded-lg bg-red-100 p-3 text-red-700 hover:bg-red-200 transition"
@@ -138,11 +139,25 @@
       </button>
     
     </form>
+    @else
+    <form x-data="{quantity:1}" action="{{ route('design.add',$design->id) }}" method="POST" class="w-full">
+                @csrf
+                @auth
+                <x-form.field x-model="quantity" label="Quantity" name="quantity" type="number" min="1"/>    
+                @endauth
+                <input type="hidden" name="design" value="{{ $design->id }}"/>
+                <input type="hidden" name="price" value="{{ $design->price }}"/>
+            <button class="w-full mt-6 bg-emerald-600 text-white py-2 px-4 rounded-xl hover:bg-emerald-700 transition">
+                Add to Cart
+            </button>
+        </form>
+    @endif
     
     </div>
   </div>
 
 </div>
+@endif
 @endforeach
 <div x-show="update" id="customModal"  class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" x-transition>
   <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl">
@@ -159,7 +174,6 @@
           @method('PUT')
             <div class="sm:col-span-2 space-y-6">
         <x-form.field label="Product Name*" name="name" x-model="design.product_name"/>
-        <x-form.field type="number" label="Price*" name="price" x-model="design.estimated_price"/>
     <label class="block font-semibold text-gray-800 mb-2">Category*</label>
     <select x-model="design.category" name="category" id="material" class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
       @foreach ($categories as $type)
@@ -272,7 +286,6 @@
     </select>
 
     <x-form.field label="Dimentions*" name="dimentions" placeholder="Enter Your Product dimentions"/>
-    <x-form.field label="Estimated Price $*" type="number" name="price" placeholder="Enter Your Product dimentions"/>
       <label class="block font-semibold text-gray-800 mb-2">Category*</label>
         <select name="category" id="category" class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
       @foreach ($categories as $type)

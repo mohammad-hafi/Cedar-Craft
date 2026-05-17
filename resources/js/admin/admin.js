@@ -49,3 +49,13 @@ export function storeProduct(){
         form.reset();
      })
 }
+
+export function markDelivery(orderId) {
+    axios.patch(`/orders/${orderId}/delivery`,{})
+    .then(res =>{
+        document.querySelectorAll(`.stat`).forEach((element) => {
+
+    element.textContent = res.data.status;
+});     
+    })
+}

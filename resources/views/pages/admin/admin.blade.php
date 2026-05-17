@@ -1,7 +1,7 @@
 <x-layout>
 
 
- <main x-data="{custom:true, product:false,orders:false}" class="mx-auto max-w-7xl px-4 py-10">
+ <main x-data="{home:true,product:false,orders:false}" class="mx-auto max-w-7xl px-4 py-10">
     <div class="rounded-xl bg-white p-8 shadow">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -13,18 +13,17 @@
       <!-- Tabs -->
       <div class="mt-8 border-b border-gray-200">
         <nav class="-mb-px flex flex-wrap gap-2">
-         <button 
-    @click="custom=true; product=false; orders=false"
-    :class="custom 
-        ? 'border-amber-400 text-emerald-900' 
+<button 
+    @click="home=true; product=false; orders=false"
+    :class="home
+        ? 'border-amber-400 text-emerald-900'
         : 'border-transparent text-gray-500 hover:text-emerald-900'"
     class="tabBtn border-b-4 px-4 py-3 font-extrabold"
 >
-    Customized Requests
+    Home
 </button>
-
 <button 
-    @click="custom=false; product=true; orders=false"
+    @click="home=false; product=true; orders=false"
     :class="product 
         ? 'border-amber-400 text-emerald-900' 
         : 'border-transparent text-gray-500 hover:text-emerald-900'"
@@ -34,7 +33,7 @@
 </button>
 
 <button 
-    @click="custom=false; product=false; orders=true"
+    @click="home=false; product=false; orders=true"
     :class="orders 
         ? 'border-amber-400 text-emerald-900' 
         : 'border-transparent text-gray-500 hover:text-emerald-900'"
@@ -45,132 +44,253 @@
         </nav>
       </div>
 
-      <!-- ===== Customized Requests ===== -->
-      <section x-show="custom" id="tab-custom" class="tabSection mt-8">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 class="text-2xl font-extrabold text-emerald-900">Customized Requests</h2>
-            <p class="text-gray-600">Read requests submitted from Customize page.</p>
-          </div>
-        </div>
-        @if($designs->isEmpty())
-        <div id="customEmpty" class="mt-6 rounded-xl border border-dashed border-gray-300 bg-white p-8 text-center text-gray-600 ">
-          <p class="font-extrabold text-emerald-900">No customized requests found.</p>
-          <p class="mt-2">Go to the Customize page and submit a request.</p>
-        </div>
-        @endif
-        <div id="customGrid" class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-@foreach($designs as $design)
-@if(strtolower($design->status->value) === 'pending')
-<div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-  <!-- IMAGE SLIDER -->
-  <div class="relative h-56 bg-gradient-to-br from-amber-100 to-amber-50">
-    
-    <div 
-    x-data="{
-        index: 0,
-        images: @js($design->images->pluck('image'))
-      }"
-      class="relative w-full h-full overflow-hidden"
-    >
+      <!-- ===== home Requests ===== -->
+      <section x-show="home" id="tab-custom" class="tabSection mt-8">
+        <section class="min-h-screen bg-gray-100 p-8">
 
-      <template x-for="(img, i) in images" :key="i">
-        <img 
-        x-show="index === i"
-        :src="'/storage/' + img"
-        class="w-full h-full object-cover"
-        >
-      </template>
-<button 
-  x-show="images.length > 1"
-  @click="if(index>0) index--"
-  class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-md hover:bg-white transition"
-  >
-  <svg xmlns="http://www.w3.org/2000/svg" 
-       class="h-5 w-5 text-gray-800" 
-       fill="none" 
-       viewBox="0 0 24 24" 
-       stroke="currentColor">
-       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-      </svg>
-    </button>
-    
-    <button 
-    x-show="images.length > 1"
-    @click="if(index < images.length-1) index++"
-    class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-md hover:bg-white transition"
-    >
-    <svg xmlns="http://www.w3.org/2000/svg" 
-    class="h-5 w-5 text-gray-800" 
-    fill="none" 
-    viewBox="0 0 24 24" 
-    stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-  </svg>
-</button>
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg p-8">
 
-</div>
+        <h1 class="text-3xl font-bold mb-8">
+            Home Settings
+        </h1>
 
-<div class="absolute right-4 top-4 rounded-full px-4 py-1 text-xs font-extrabold text-white
-{{ strtolower($design->status->value) === 'pending' ? 'bg-yellow-500' : '' }}
-{{ strtolower($design->status->value) === 'accepted' ? 'bg-emerald-600' : '' }}
-{{ strtolower($design->status->value) === 'rejected' ? 'bg-red-600' : '' }}
-">
-{{ $design->status }}
-</div>
+        <form action="/new" method="POST" enctype="multipart/form-data">
+            @csrf
 
-</div>
+            <div class="overflow-x-auto">
+                <table class="w-full border border-gray-200 rounded-xl overflow-hidden">
 
-<a href="/admin/custom/{{ $design->id }}">
-  <!-- CONTENT -->
-  <div class="p-6">
-    <div class="flex items-center justify-between gap-3">
-      <h3 class="text-xl font-extrabold text-emerald-900 leading-tight">
-        {{ $design->product_name }}
-      </h3>
+                    <tbody>
+
+                        <!-- Website Name -->
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold">
+                                Website Name
+                            </td>
+
+                            <td class="p-4">
+                                <input
+                                    type="text"
+                                    name="website_name"
+                                    value="{{ $name }}"
+                                    class="w-full rounded-xl p-2 focus:ring-2 focus:ring-green-500"
+                                    placeholder="Enter website name">
+                            </td>
+                        </tr>
+
+                        <!-- Logo -->
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold">
+                                Website Logo
+                            </td>
+
+                            <td class="p-4">
+                                @if($logo)
+                                    <div class="mb-2">
+                                        <p class="text-sm text-gray-600">Current Logo:</p>
+                                        <img src="{{ asset('storage/' . $logo) }}" alt="Current Logo" class="h-16 w-16 object-cover rounded">
+                                    </div>
+                                @endif
+                                <input
+                                    type="file"
+                                    name="logo"
+                                    class="w-full rounded-xl border-gray-300">
+                            </td>
+                        </tr>
+
+                        <!-- Featured Products -->
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold align-top">
+                                Featured Products
+                            </td>
+
+                            <td class="p-4">
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                                    @foreach($products as $product)
+
+                                        <label class="flex items-center gap-3 border rounded-xl p-3 hover:bg-gray-50 cursor-pointer">
+
+                                            <input
+                                                type="checkbox"
+                                                name="featured_products[]"
+                                                value="{{ $product->id }}"
+                                                {{ in_array($product->id, $featuredProducts) ? 'checked' : '' }}
+                                                class="rounded text-green-600">
+
+                                            <div>
+                                                <h2 class="font-medium">
+                                                    {{ $product->name }}
+                                                </h2>
+
+                                                <p class="text-sm text-gray-500">
+                                                    ${{ $product->price }}
+                                                </p>
+                                            </div>
+
+                                        </label>
+
+                                    @endforeach
+
+                                </div>
+
+                                <p class="text-sm text-gray-500 mt-3">
+                                    Select products to feature
+                                </p>
+
+                            </td>
+                        </tr>
+
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold">
+                                intro
+                            </td>
+
+                            <td class="p-4">
+                                <input
+                                    type="text"
+                                    name="intro"
+                                    value="{{ $intro }}"
+                                    class="w-full rounded-xl p-2 focus:ring-2 focus:ring-green-500"
+                                    placeholder="Enter your intro">
+                            </td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold">
+                                desciption
+                            </td>
+
+                            <td class="p-4">
+                                <input
+                                    type="text"
+                                    name="description"
+                                    value="{{ $des }}"
+                                    class="w-full rounded-xl p-2 focus:ring-2 focus:ring-green-500"
+                                    placeholder="Enter your description">
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition">
+
+                    Save Settings
+
+                </button>
+            </div>
+
+        </form>
+        
+
     </div>
-    
-    <p class="mt-3 text-gray-600">
-      {{ $design->description }}
-    </p>
-    <p class="mt-3 text-gray-600">
-      {{ $design->material->type ?? 'No material' }}s
-    </p>
-    
-    <div class="mt-4 text-2xl font-extrabold text-emerald-900">
-      ${{ $design->estimated_price }}
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl mt-8 shadow-lg p-8">
+        <form action="/new/about" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="overflow-x-auto">
+                <table class="w-full border border-gray-200 rounded-xl overflow-hidden">
+
+                    <tbody>
+
+                        <!-- Website Name -->
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold">
+                                story
+                            </td>
+
+                            <td class="p-4">
+    <textarea
+    name="story"
+    class="w-full rounded-xl p-2 focus:ring-2 focus:ring-green-500"
+    placeholder="Enter website name">{{ $story }}</textarea>
+                            </td>
+                        </tr>
+
+                        <!-- Featured Products -->
+
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold">
+                                info
+                            </td>
+
+                            <td class="p-4">
+                                <input
+                                    type="text"
+                                    name="info"
+                                    value="{{ $info }}"
+                                    class="w-full rounded-xl p-2 focus:ring-2 focus:ring-green-500"
+                                    placeholder="Enter your info">
+                            </td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold">
+                                mission
+                            </td>
+
+                            <td class="p-4">
+                                <input
+                                    type="text"
+                                    name="mission"
+                                    value="{{ $mission }}"
+                                    class="w-full rounded-xl p-2 focus:ring-2 focus:ring-green-500"
+                                    placeholder="Enter your mission">
+                            </td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold">
+                                vision
+                            </td>
+
+                            <td class="p-4">
+                                <input
+                                    type="text"
+                                    name="vision"
+                                    value="{{ $vision }}"
+                                    class="w-full rounded-xl p-2 focus:ring-2 focus:ring-green-500"
+                                    placeholder="Enter your vision">
+                            </td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="p-4 font-semibold">
+                                values
+                            </td>
+
+                            <td class="p-4">
+                                <input
+                                    type="text"
+                                    name="values"
+                                    value="{{ $values }}"
+                                    class="w-full rounded-xl p-2 focus:ring-2 focus:ring-green-500"
+                                    placeholder="Enter your values">
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition">
+
+                    Save Settings
+
+                </button>
+            </div>
+
+        </form>
+        
+
     </div>
-    
-  </div>
-</a>
-<form method="POST" action="/admin/{{ $design->id }}/status" class=" m-3 flex gap-3">
-    @csrf
-    @method('PATCH')
-    
-    <!-- ACCEPT -->
-    <button 
-    type="submit"
-    name="status"
-    value="Accepted"
-    class="flex-1 rounded-lg bg-emerald-600 px-2 py-2 font-bold text-white hover:bg-emerald-700 transition"
-    >
-    Accept
-  </button>
-  
-  <!-- REJECT -->
-  <button 
-  type="submit"
-  name="status"
-  value="Rejected"
-  class="flex-1 rounded-lg bg-red-600 px-2 py-2 font-bold text-white hover:bg-red-700 transition"
-  >
-  Reject
-</button>
-</form>
-</div>
-@endif
-@endforeach
-        </div>
+
+</section>
       </section>
 
       <!-- ===== Products ===== -->
@@ -297,9 +417,17 @@
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 class="text-2xl font-extrabold text-emerald-900">Customer Orders</h2>
-          </div>
-          <button id="refreshOrdersBtn" class="rounded-lg bg-emerald-900 px-4 py-2 font-extrabold text-white hover:bg-emerald-950">Refresh</button>
-        </div>
+         
+</div>
+<button id="refreshOrdersBtn"
+    class="w-full max-w-xs rounded-xl bg-white p-4 text-left shadow-md border border-gray-200 hover:shadow-lg transition"
+>
+    <div class="text-xs font-bold text-gray-500">TOTAL REVENUE</div>
+    <div class="mt-1 text-3xl font-extrabold text-emerald-900">
+        ${{ $total }}
+    </div>
+</button>        
+</div>
         
         @if($orders->isEmpty())
         <div id="ordersEmpty" class="mt-6 rounded-xl border border-dashed border-gray-300 bg-white p-8 text-center text-gray-600 ">
@@ -309,20 +437,29 @@
         @endif
         @foreach ($orders as $order)
       @foreach($order->items as $item)
-        <div id="ordersList" class="mt-6 space-buffer-4">
+        @if($item->soft_delete != 1 && in_array($order->status->value, ['Pending', 'Paid']))
+            <div id="ordersList" class="mt-6 space-buffer-4">
             <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div class=" space-y-2">
-              <div class="text-2xl font-bold text-emerald-900">{{$item->product->name}}</div>
+              <div class="text-2xl font-bold text-emerald-900">{{ $item->product->name ?? $item->design->product_name }}</div>
               <div class="text-xl font-extrabold text-emerald-900">Quantity: {{$item->quantity}}</div>
               <div class="mt-1 text-sm text-gray-600">Customer: <span class="font-bold">{{ $order->user->name }}</span></div>
               <div class="mt-1 text-xs text-gray-500">Created: {{ $item->created_at }}</div>
            </div>
 
             <div class="text-right space-y-2">
-              <div class="inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-extrabold text-amber-800 border border-amber-200">{{$order->status}}</div>
+              <div class=" stat inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-extrabold text-amber-800 border border-amber-200">{{$order->status}}</div>
               <div class="mt-3 text-xs font-bold text-gray-500">Total</div>
               <div class="text-2xl font-extrabold text-emerald-900">${{ $item->price_at_purchase * $item->quantity }}</div>
+              @if($order->status->value == 'Paid')
+              <button
+                onclick="markDelivery({{$order->id}})"
+                class="mt-4 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700 cursor-pointer"
+            >
+                Mark As Delivery
+            </button>
+            @endif
                 {{-- <form action="/cart/remove/{{$order->id}}" method="POST" class="mt-4">
                     @csrf
                     @method('DELETE')
@@ -332,6 +469,7 @@
           </div>
 
         </div>
+        @endif
         @endforeach
         @endforeach
         </div>

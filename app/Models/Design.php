@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Design extends Model
 {
-    protected $fillable = ['user_id','product_name', 'description','material_id','category_id', 'estimated_price', 'status', 'dimentions'];
+    protected $fillable = ['user_id','product_name', 'description','material_id','soft_delete','category_id', 'estimated_price', 'status', 'dimentions'];
     protected $casts=[
         'status'=>RequestStatus::class,
     ];

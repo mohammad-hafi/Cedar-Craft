@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\UpdateProduct;
 use App\Models\Category;
+use App\Models\Design;
 use App\Models\Material;
 use App\Models\Order;
 use App\Models\Product;
@@ -70,7 +71,10 @@ $order=$user->orders()->firstOrCreate([
     'user_id'=>$user->id,
     'status'=>'Pending'
 ]);
-    $item=$order->items()->where('product_id',$product->id)->first();
+    $item = $order->items()
+    ->where('product_id', $product->id)
+    ->where('soft_delete', 0)
+    ->first();
     if($item){
        $newQuantity=$item->quantity + $request->quantity;
          $item->update([
@@ -88,6 +92,53 @@ $order=$user->orders()->firstOrCreate([
         }
     
     }
+    public function storeDesign(Request $request)
+{
+    $request->validate([
+        'quantity' => 'required|integer|min:1',
+        'design' => 'required|exists:designs,id',
+    ]);
+
+    $user = Auth::user();
+
+    $design = Design::findOrFail($request->design);
+
+    $price = $design->estimated_price;
+
+    $order = $user->orders()->firstOrCreate([
+        'user_id' => $user->id,
+        'status' => 'Pending'
+    ]);
+
+   $item = $order->items()
+    ->where('design_id', $design->id)
+    ->where('soft_delete', 0)
+    ->first();
+
+    if ($item) {
+
+        $newQuantity = $item->quantity + $request->quantity;
+
+        $item->update([
+            'quantity' => $newQuantity,
+            'price_at_purchase' => $price * $newQuantity
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Design quantity updated in cart successfully');
+
+    } else {
+
+        $order->items()->create([
+            'design_id' => $design->id,
+            'quantity' => $request->quantity,
+            'price_at_purchase' => $price * $request->quantity
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Design added to cart successfully');
+    }
+}
 
     /**
      * Display the specified resource.

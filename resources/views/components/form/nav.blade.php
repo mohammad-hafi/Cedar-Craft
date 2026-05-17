@@ -12,7 +12,8 @@
     ['href'=>'/customize','label'=>'Customize'],
   ];
   $adminlinks=[
-    ['href'=>'/','label'=>'Home'],
+    ['href'=>'/admin/home','label'=>'Home'],
+    ['href'=>'/admin/customize','label'=>'Customize'],
     ['href'=>'/about','label'=>'About'],
     ['href'=>'/shop','label'=>'My Shop'],
     ['href'=>'/admin','label'=>'Admin'],

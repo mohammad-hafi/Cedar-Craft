@@ -37,7 +37,6 @@ class DesignController extends Controller
             'category_id' => $request->category,
             'material_id' => $request->material,
             'dimentions' => $request->dimentions,
-            'estimated_price' => $request->price,
         ]);
 
         if ($request->hasFile('image')) {
@@ -76,13 +75,14 @@ class DesignController extends Controller
      */
     public function update(DesignRequest $request, Design $design)
     {
+        
         $design->update([
             'product_name' => $request->name,
             'description' => $request->description,
             'category_id' => $request->category,
+            'status' => 'Pending',
             'material_id' => $request->material,
             'dimentions' => $request->dimentions,
-            'estimated_price' => $request->price,
      ]);
      if($request->deleted_images){
         $ids=explode(',',$request->deleted_images);
@@ -108,15 +108,13 @@ class DesignController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Design $design)
+    public function destroy(Design $design,Request $request)
     {
         
-        if($design->user_id !== Auth::id())
-    {
-        abort(403);
-    }
-        $design->delete();
-        return redirect()->back();
+       $design->update([
+        'soft_delete'=>$request->soft_delete,
+       ]);
+        return redirect()->back()->with('success','Design deleted successfully');
 
     }
 }

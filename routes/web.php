@@ -15,10 +15,11 @@ Route::get('/about',[PageController::class,'about']);
 Route::get('/shop/show/{product}',[ShopController::class,'show'])->name('shop.show');
 Route::get('/shop',[ShopController::class,'index']);
 Route::get('/search-products', [ShopController::class, 'search']);
-Route::delete('/logout',[LoginController::class,'destroy'])->middleware('auth');
-Route::post('/shop/add/{product}',[ShopController::class,'store'])->middleware('auth')->name('product.add');
 
 Route::middleware('auth')->group(function () {
+    Route::post('/customize/add/{design}',[ShopController::class,'storeDesign'])->name('design.add');
+    Route::post('/shop/add/{product}',[ShopController::class,'store'])->name('product.add');
+    Route::delete('/logout',[LoginController::class,'destroy']);
     Route::get('/chat/users', [ChatController::class, 'users']);
     Route::get('/chat/messages/{id}', [ChatController::class, 'messages']);
     Route::post('/chat/send', [ChatController::class, 'send']);
@@ -27,14 +28,17 @@ Route::middleware('auth')->group(function () {
 Route::middleware('admin')->group(function () {
 Route::get('/admin/home',[PageController::class,'create']);
 Route::post('/new',[PageController::class,'store']);
+Route::post('/new/about',[PageController::class,'storeAbout']);
+Route::get('/admin/customize',[AdminController::class,'customize']);
 Route::get('/admin',[AdminController::class,'index']);
 Route::post('/admin',[AdminController::class,'store']);
 Route::post('/admin/category',[AdminController::class,'createCategory']);
 Route::post('/admin/material',[AdminController::class,'createMaterial']);
 Route::put('/admin/products/{product}',[AdminController::class,'updateShop']);
-Route::delete('/admin/products/{product}',[AdminController::class,'destroy']);
+Route::patch('/admin/products/{product}',[AdminController::class,'destroy']);
 Route::patch('/admin/{design}/status',[AdminController::class,'update']);
-Route::get('/admin/custom/{design}',[AdminController::class,'show']);
+Route::patch('/admin/reject/{design}',[AdminController::class,'reject']);
+Route::patch('/orders/{order}/delivery', [OrderController::class, 'delivery']);
 });
 
 
@@ -48,8 +52,9 @@ Route::post('/login',[LoginController::class,'store']);
 Route::middleware(['customer'])->group(function(){
 Route::get('/customize',[DesignController::class,'index']);
 Route::post('/customize',[DesignController::class,'store']);
-Route::delete('/customize/{design}',[DesignController::class,'destroy']);
+Route::patch('/customize/{design}',[DesignController::class,'destroy']);
 Route::put('/customize/update/{design}',[DesignController::class,'update']);
 Route::get('/cart',[OrderController::class,'index']);
-Route::delete('/cart/remove/{order}',[OrderController::class,'destroy']);
+Route::patch('/order/confirm/{order}',[OrderController::class,'update']);
+Route::patch('/cart/remove/{order}',[OrderController::class,'destroy']);
  });

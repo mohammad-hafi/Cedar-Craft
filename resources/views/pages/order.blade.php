@@ -15,15 +15,39 @@
         </div>
         @foreach ($orders as $order)
         @foreach($order->items as $item)
+        @if($item->soft_delete != 1)
         <div id="ordersList" class="mt-6 space-buffer-4">
             <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div class=" space-y-2">
-              <div class="text-2xl font-bold text-emerald-900">{{$item->product->name}}</div>
+              <div class="text-2xl font-bold text-emerald-900">{{ $item->product->name ?? $item->design->product_name }}</div>
               <div class="text-xl font-extrabold text-emerald-900">Quantity: {{$item->quantity}}</div>
               <div class="mt-1 text-sm text-gray-600">Customer: <span class="font-bold">{{ $order->user->name }}</span></div>
               <div class="mt-1 text-xs text-gray-500">Created: {{ $item->created_at }}</div>
-              <a class="text-xl font-extrabold rounded-full text-white bg-emerald-900 px-10 py-2 cursor-pointer ">Confirm Order</a>
+              <form action="/order/confirm/{{$order->id}}" method="POST" class="pt-3">
+    @csrf
+    @method('PATCH')
+    <button 
+        type="submit"
+        name="status"
+        value="Paid"
+        class="group inline-flex items-center gap-3 rounded-xl bg-emerald-900 px-6 py-3 text-lg font-extrabold text-white shadow-lg transition duration-300 hover:scale-105 hover:bg-emerald-800 hover:shadow-emerald-200"
+    >
+        <!-- Check Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             class="h-6 w-6 transition group-hover:rotate-12" 
+             fill="none" 
+             viewBox="0 0 24 24" 
+             stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  d="M5 13l4 4L19 7" />
+        </svg>
+
+        Confirm Order
+    </button>
+</form>
             </div>
 
             <div class="text-right space-y-2">
@@ -32,7 +56,8 @@
               <div class="text-2xl font-extrabold text-emerald-900">${{ $item->price_at_purchase}}</div>
                 <form action="/cart/remove/{{$item->id}}" method="POST" class="mt-4">
                     @csrf
-                    @method('DELETE')
+                    @method('PATCH')
+                    <input type="hidden" name="soft_delete" value="1">
                     <button type="submit" class="text-sm font-extrabold cursor-pointer text-red-500 underline">remove</button>
                 </form>
             </div>
@@ -41,7 +66,7 @@
         </div>
         
     </div>
-    
+    @endif
     @endforeach
     @endforeach
 </div>

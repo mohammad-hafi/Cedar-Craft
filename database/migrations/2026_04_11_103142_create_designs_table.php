@@ -20,7 +20,8 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->foreignId('material_id')->constrained()->cascadeOnDelete();
             $table->string('status')->default('pending');
-            $table->integer('estimated_price');
+            $table->integer('soft_delete')->default(0);
+            $table->integer('estimated_price')->nullable();
             $table->timestamps();
         });
     }

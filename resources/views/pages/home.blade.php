@@ -16,9 +16,9 @@
     <div class="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 md:grid-cols-2">
       <div class="hero-left">
         
-        <h1 class="text-4xl font-extrabold leading-tight md:text-5xl">Welcome to Cedar Craft</h1>
+        <h1 class="text-4xl font-extrabold leading-tight md:text-5xl">{{ setting('intro') }}</h1>
         
-        <p class="mt-4 text-lg text-white/90">Discover premium handcrafted products with exceptional quality</p>
+        <p class="mt-4 text-lg text-white/90">{{ setting('description') }}</p>
         <a href="/shop" class="mt-8 inline-block rounded-full bg-amber-400 px-10 py-4 text-sm font-extrabold uppercase tracking-wider text-emerald-950 shadow hover:bg-amber-300">
           Shop Now
         </a>
@@ -34,124 +34,6 @@
       </div>
     </div> 
     </section>  
-      @admin
-
-<section class="min-h-screen bg-gray-100 p-8">
-
-    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg p-8">
-
-        <h1 class="text-3xl font-bold mb-8">
-            Home Settings
-        </h1>
-
-        <form action="/new" method="POST" enctype="multipart/form-data">
-            @csrf
-
-            <div class="overflow-x-auto">
-                <table class="w-full border border-gray-200 rounded-xl overflow-hidden">
-
-                    <tbody>
-
-                        <!-- Website Name -->
-                        <tr class="border-t">
-                            <td class="p-4 font-semibold">
-                                Website Name
-                            </td>
-
-                            <td class="p-4">
-                                <input
-                                    type="text"
-                                    name="website_name"
-                                    value="{{ $name }}"
-                                    class="w-full rounded-xl p-2 focus:ring-2 focus:ring-green-500"
-                                    placeholder="Enter website name">
-                            </td>
-                        </tr>
-
-                        <!-- Logo -->
-                        <tr class="border-t">
-                            <td class="p-4 font-semibold">
-                                Website Logo
-                            </td>
-
-                            <td class="p-4">
-                                @if($logo)
-                                    <div class="mb-2">
-                                        <p class="text-sm text-gray-600">Current Logo:</p>
-                                        <img src="{{ asset('storage/' . $logo) }}" alt="Current Logo" class="h-16 w-16 object-cover rounded">
-                                    </div>
-                                @endif
-                                <input
-                                    type="file"
-                                    name="logo"
-                                    class="w-full rounded-xl border-gray-300">
-                            </td>
-                        </tr>
-
-                        <!-- Featured Products -->
-                        <tr class="border-t">
-                            <td class="p-4 font-semibold align-top">
-                                Featured Products
-                            </td>
-
-                            <td class="p-4">
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                                    @foreach($products as $product)
-
-                                        <label class="flex items-center gap-3 border rounded-xl p-3 hover:bg-gray-50 cursor-pointer">
-
-                                            <input
-                                                type="checkbox"
-                                                name="featured_products[]"
-                                                value="{{ $product->id }}"
-                                                {{ in_array($product->id, $featuredProducts) ? 'checked' : '' }}
-                                                class="rounded text-green-600">
-
-                                            <div>
-                                                <h2 class="font-medium">
-                                                    {{ $product->name }}
-                                                </h2>
-
-                                                <p class="text-sm text-gray-500">
-                                                    ${{ $product->price }}
-                                                </p>
-                                            </div>
-
-                                        </label>
-
-                                    @endforeach
-
-                                </div>
-
-                                <p class="text-sm text-gray-500 mt-3">
-                                    Select products to feature
-                                </p>
-
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-            </div>
-
-            <div class="mt-8 flex justify-end">
-                <button
-                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition">
-
-                    Save Settings
-
-                </button>
-            </div>
-
-        </form>
-
-    </div>
-
-</section>
-    @endadmin
     @if($products->count() > 0)
 @php $totalSlides = max(1, $products->count() - 2); @endphp
     <section class="py-16 bg-gray-50">

@@ -28,7 +28,7 @@ class DesignRequest extends FormRequest
             'material'=>['required'],
             'dimentions'=>['required','string'],
             'category'=>['required'],
-            'price'=>['required','numeric','min:5'],
+            'price'=>['nullable'],
             'image' => ['nullable', 'array'],
             'image.*' => ['image', 'mimes:jpg,png,jpeg,gif,svg']
 

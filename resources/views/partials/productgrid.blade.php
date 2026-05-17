@@ -1,4 +1,5 @@
- @foreach($products as $product)
+@foreach($products as $product)
+@if($product->soft_delete != 1)
 @if(!auth()->check() || !auth()->user()->is_admin())
 <a href="{{ route('shop.show', $product->id) }}">
 @endif 
@@ -93,8 +94,8 @@
   
   <form action="/admin/products/{{ $product->id }}" method="POST">
     @csrf
-    @method('DELETE')
-  
+    @method('PATCH')
+  <input type="hidden" name="soft_delete" value="{{ 1 }}"/>
     <button 
       type="submit"
       class="rounded-lg bg-red-100 p-3 text-red-700 hover:bg-red-200 transition"
@@ -117,7 +118,7 @@
 </div>
     </a>
 
+    @endif
 @endforeach
         </div>
         <!-- End product grid -->
-        

@@ -53,6 +53,8 @@ public function store(Request $request)
         'website_name' => 'required',
         'logo' => 'nullable|image',
         'featured_products' => 'required|array',
+        'intro'=>'required|string',
+        'description'=>'required|string'
     ]);
 
     Home::updateOrCreate(
@@ -63,6 +65,14 @@ public function store(Request $request)
     Home::updateOrCreate(
         ['attribute' => 'featured_products'],
         ['value' => json_encode($request->featured_products)]
+    );
+    Home::updateOrCreate(
+        ['attribute' => 'intro'],
+        ['value' => $request->intro]
+    );
+    Home::updateOrCreate(
+        ['attribute' => 'description'],
+        ['value' => $request->description]
     );
 
     if ($request->hasFile('logo')) {
@@ -77,6 +87,40 @@ public function store(Request $request)
 
     return back();
 }
+
+    public function storeAbout(Request $request){
+        $request->validate([
+        'story' => 'required',
+        'info' => 'required',
+        'mission' => 'required',
+        'vision' => 'required',
+        'values' => 'required',
+    ]);
+
+    Home::updateOrCreate(
+        ['attribute' => 'story'],
+        ['value' => $request->story]
+    );
+    Home::updateOrCreate(
+        ['attribute' => 'info'],
+        ['value' => $request->info]
+    );
+    Home::updateOrCreate(
+        ['attribute' => 'mission'],
+        ['value' => $request->mission]
+    );
+    Home::updateOrCreate(
+        ['attribute' => 'vision'],
+        ['value' => $request->vision]
+    );
+    Home::updateOrCreate(
+        ['attribute' => 'values'],
+        ['value' => $request->values]
+    );
+
+    return back();
+    }
+
     public function about(){
     return view('pages.about');
     }

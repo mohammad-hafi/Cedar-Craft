@@ -7,8 +7,10 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Requests\UpdateProduct;
 use App\Models\Category;
 use App\Models\Design;
+use App\Models\Home;
 use App\Models\Material;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductImages;
 use Illuminate\Http\Request;
@@ -22,21 +24,61 @@ class AdminController extends Controller
      */
     public function index()
     {
+    $products = Product::all();
 
-        return view('pages/admin/admin',[
-            'designs'=>Design::all(),
-            'materials'=>Material::all(),
-            'categories'=>Category::all(),
-            'orders'=>Order::all(),
-        ]);
+    $featuredProducts = json_decode(
+        Home::where('attribute', 'featured_products')->value('value'),
+        true
+    ) ?? [];
+
+    $name = Home::where('attribute', 'website_name')->value('value');
+    $intro = Home::where('attribute', 'intro')->value('value');
+    $story = Home::where('attribute', 'story')->value('value');
+    $info = Home::where('attribute', 'info')->value('value');
+    $mission = Home::where('attribute', 'mission')->value('value');
+    $vision = Home::where('attribute', 'vision')->value('value');
+    $values = Home::where('attribute', 'values')->value('value');
+    $des = Home::where('attribute', 'description')->value('value');
+    $logo = Home::where('attribute', 'logo')->value('value');
+
+    $categories=Category::all();
+    $materials=Material::all();
+    $orders=Order::all();
+    $designs=Design::all();
+$total = OrderItem::whereHas('order', function ($query) {
+
+    $query->whereIn('status', ['Paid', 'Delivery']);
+
+})->sum("price_at_purchase");
+
+        return view('pages/admin/admin',compact(
+        'name',
+        'total',
+        'logo',
+        'mission',
+        'vision',
+        'values',
+        'info',
+        'story',
+        'featuredProducts',
+        'products',
+        'des',
+        'intro',
+        'categories',
+        'materials',
+        'orders',
+        'designs'
+    ));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function customize()
     {
-        //
+        return view('pages/admin/customize',[
+            'designs'=>Design::all(),
+        ]);
     }
 
     /**
@@ -71,12 +113,7 @@ class AdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        return view('pages.admin.show',[
-            'design'=>Design::find($id)
-        ]);
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -90,6 +127,19 @@ class AdminController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
+    {
+        $design=Design::findOrFail($id);
+      $request->validate([
+        'status'=>'required|in:In Progress,Accepted,Rejected',
+        'estimated_price'=>'required|numeric|min:5'
+      ]);
+      $design->update([
+        'estimated_price'=>$request->estimated_price,
+        'status'=>$request->status,
+      ]);
+      return back();
+    }
+    public function reject(Request $request, string $id)
     {
         $design=Design::findOrFail($id);
       $request->validate([
@@ -136,17 +186,11 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-     public function destroy(Product $product)
+     public function destroy(Product $product, Request $request)
     {
-        if(!auth()->user()->is_admin()){
-            abort(403);
-        }
-        foreach($product->images as $image){
-            Storage::disk('public')->delete($image->image);
-            $image->delete();
-        }
-        $product->orderitems()->delete();
-        $product->delete();
+        $product->update([
+        'soft_delete'=>$request->soft_delete,
+      ]);
         return back()->with('success','Product deleted successfully');
     }
 

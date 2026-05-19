@@ -39,14 +39,16 @@
     <section class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">Featured Products</h2>
-
+            
             <div class="relative" x-data="{ current: 0, totalSlides: {{ $totalSlides }}, visible: 3, interval: null }" x-init="interval = setInterval(() => current = (current + 1) % totalSlides, 2500)" @mouseenter="clearInterval(interval); interval = null" @mouseleave="if (!interval) interval = setInterval(() => current = (current + 1) % totalSlides, 2500)">
                 <!-- Slider Container -->
                 <div class="overflow-hidden rounded-2xl">
                     <div class="flex transition-transform duration-500 ease-in-out" :style="`transform: translateX(-${current * (100 / 3)}%)`">
                         @foreach($products as $index => $product)
+                        @if ($product->soft_delete !=1)
+                        
                         <div class="w-1/3 flex-shrink-0 px-2">
-                            <div class="bg-white rounded-2xl shadow-lg overflow-hidden h-full">
+                          <div class="bg-white rounded-2xl shadow-lg overflow-hidden h-full">
                                 <!-- IMAGE SLIDER -->
                                 <div class="relative bg-gray-50 overflow-hidden h-48"
                                      x-data="{
@@ -69,12 +71,12 @@
                                       </span>
                                     </div>
                                 </div>
-
+                                
                                 <!-- CONTENT -->
                                 <div class="p-4">
                                     <!-- Title + Price -->
                                     <div class="flex items-start justify-between gap-2 mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-900 line-clamp-1">
+                                      <h3 class="text-lg font-semibold text-gray-900 line-clamp-1">
                                             {{ $product->name }}
                                         </h3>
                                         <span class="text-xl font-bold text-emerald-700">
@@ -85,37 +87,38 @@
                                     <!-- Description -->
                                     <p class="text-xs text-gray-500 line-clamp-2 mb-3">
                                         {{ $product->description }}
-                                    </p>
-
+                                      </p>
+                                      
                                     <!-- Details -->
                                     <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-600 mb-4">
-                                        <div>
-                                            <p class="text-gray-400 uppercase tracking-wide">Material</p>
-                                            <p class="font-medium text-gray-800">
-                                                {{ $product->material->type ?? 'No material' }}
-                                            </p>
-                                        </div>
-                                        <div>
+                                      <div>
+                                        <p class="text-gray-400 uppercase tracking-wide">Material</p>
+                                        <p class="font-medium text-gray-800">
+                                          {{ $product->material->type ?? 'No material' }}
+                                        </p>
+                                      </div>
+                                          <div>
                                             <p class="text-gray-400 text-right uppercase tracking-wide">Dimensions</p>
                                             <p class="text-right font-medium text-gray-800">
-                                                {{ $product->dimentions }}
+                                              {{ $product->dimentions }}
                                             </p>
-                                        </div>
-                                        <div>
+                                          </div>
+                                          <div>
                                             <p class="text-gray-400 uppercase tracking-wide">Stock</p>
                                             <p class="font-medium text-gray-800">
-                                                {{ $product->stock }}
+                                              {{ $product->stock }}
                                             </p>
+                                          </div>
                                         </div>
+                                        
+                                        <!-- Shop Button -->
+                                        <a href="{{ route('shop.show', $product->id) }}" class="w-full inline-block text-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition">
+                                          View Product
+                                        </a>
+                                      </div>
                                     </div>
-
-                                    <!-- Shop Button -->
-                                    <a href="{{ route('shop.show', $product->id) }}" class="w-full inline-block text-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition">
-                                        View Product
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                                  </div>
+                                  @endif
                         @endforeach
                     </div>
                 </div>

@@ -58,12 +58,14 @@ class ShopController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {        
         $request->validate([
             'quantity'=>'required|integer|min:1',
             'product'=>'required|exists:products,id',
-            'price'=>'required|numeric|min:0'
+            'price'=>'required|numeric|min:0',
+            'material' => 'required|exists:materials,id',
             ]);
+$materialId = $request->material;
 $user=Auth::user();
 $product=Product::findOrFail($request->product);
 $price=$product->price;
@@ -73,6 +75,7 @@ $order=$user->orders()->firstOrCreate([
 ]);
     $item = $order->items()
     ->where('product_id', $product->id)
+    ->where('material_id', $materialId)
     ->where('soft_delete', 0)
     ->first();
     if($item){
@@ -81,64 +84,18 @@ $order=$user->orders()->firstOrCreate([
             'quantity'=>$newQuantity,
             'price_at_purchase'=>$price * $newQuantity
          ]);
-        return redirect()->route('shop.show',$request->product)->with('success','Product quantity updated in cart successfully');
+        return redirect()->back()->with('success','Product quantity updated in cart successfully');
     }else{
         $order->items()->create([
-            'product_id'=>$product->id,
-            'quantity'=>$request->quantity,
-            'price_at_purchase'=>$price * $request->quantity
+    'product_id' => $product->id,
+    'quantity' => $request->quantity,
+    'price_at_purchase' => $price * $request->quantity,
+    'material_id' => $materialId,
         ]);
-        return redirect()->route('shop.show',$request->product)->with('success','Product added to cart successfully');
+        return redirect()->back()->with('success','Product added to cart successfully');
         }
     
     }
-    public function storeDesign(Request $request)
-{
-    $request->validate([
-        'quantity' => 'required|integer|min:1',
-        'design' => 'required|exists:designs,id',
-    ]);
-
-    $user = Auth::user();
-
-    $design = Design::findOrFail($request->design);
-
-    $price = $design->estimated_price;
-
-    $order = $user->orders()->firstOrCreate([
-        'user_id' => $user->id,
-        'status' => 'Pending'
-    ]);
-
-   $item = $order->items()
-    ->where('design_id', $design->id)
-    ->where('soft_delete', 0)
-    ->first();
-
-    if ($item) {
-
-        $newQuantity = $item->quantity + $request->quantity;
-
-        $item->update([
-            'quantity' => $newQuantity,
-            'price_at_purchase' => $price * $newQuantity
-        ]);
-
-        return redirect()->back()
-            ->with('success', 'Design quantity updated in cart successfully');
-
-    } else {
-
-        $order->items()->create([
-            'design_id' => $design->id,
-            'quantity' => $request->quantity,
-            'price_at_purchase' => $price * $request->quantity
-        ]);
-
-        return redirect()->back()
-            ->with('success', 'Design added to cart successfully');
-    }
-}
 
     /**
      * Display the specified resource.
@@ -162,6 +119,7 @@ $order=$user->orders()->firstOrCreate([
         return view('pages.shop.show', [
             'product' => $product,
             'products' => $products,
+            'materials' => Material::all(),
         ]);
     }
 

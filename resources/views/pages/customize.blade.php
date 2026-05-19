@@ -140,17 +140,35 @@
     
     </form>
     @else
-    <form x-data="{quantity:1}" action="{{ route('design.add',$design->id) }}" method="POST" class="w-full">
-                @csrf
-                @auth
-                <x-form.field x-model="quantity" label="Quantity" name="quantity" type="number" min="1"/>    
-                @endauth
-                <input type="hidden" name="design" value="{{ $design->id }}"/>
-                <input type="hidden" name="price" value="{{ $design->price }}"/>
-            <button class="w-full mt-6 bg-emerald-600 text-white py-2 px-4 rounded-xl hover:bg-emerald-700 transition">
-                Add to Cart
-            </button>
-        </form>
+    @foreach ($products as $product)
+    <form x-data="{quantity:1}" action="{{ route('product.add',$product->id) }}" method="POST" class="w-full">  
+    @endforeach
+      @csrf
+  @auth
+  <label class="block font-semibold text-gray-800 mb-2">Material:</label>
+  <select name="material" id="material" class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
+      @foreach ($materials as $type)
+          <option value="{{ $type->id }}">{{$type->type}}</option>
+      @endforeach  
+    </select>  
+    <x-form.field 
+    x-model="quantity"
+    label="Quantity"
+    name="quantity"
+    type="number"
+    min="1"
+    />
+    @endauth
+    @foreach ($products as $product)
+    <input type="hidden" name="product" value="{{ $product->id }}"/>
+    @endforeach
+    
+    <input type="hidden" name="price" value="{{ $design->estimated_price }}"/>
+    
+    <button class="w-full mt-6 bg-emerald-600 text-white py-2 px-4 rounded-xl hover:bg-emerald-700 transition">
+      Add to Cart
+    </button>
+  </form>
     @endif
     
     </div>

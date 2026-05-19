@@ -78,6 +78,8 @@ $total = OrderItem::whereHas('order', function ($query) {
     {
         return view('pages/admin/customize',[
             'designs'=>Design::all(),
+            'categories'=>Category::all(),
+            'materials'=>Material::all(),
         ]);
     }
 
@@ -129,15 +131,30 @@ $total = OrderItem::whereHas('order', function ($query) {
     public function update(Request $request, string $id)
     {
         $design=Design::findOrFail($id);
-      $request->validate([
-        'status'=>'required|in:In Progress,Accepted,Rejected',
-        'estimated_price'=>'required|numeric|min:5'
-      ]);
+        $request->validate([
+          'status'=>'required|in:In Progress,Accepted,Rejected',
+          'estimated_price'=>'required|numeric|min:5'
+        ]);
+            $product=Product::create([
+            'name'=>$design->product_name,
+            'description'=>$design->description,
+            'material_id'=>$design->material_id,
+            'category_id'=>$design->category_id,
+            'price'=>$request->estimated_price,
+            'stock'=>$request->stock,
+            'dimentions'=>$design->dimentions
+        ]);
+        foreach ($design->images as $image) {
+
+    $product->images()->create([
+        'image' => $image->image
+    ]);
+    }
       $design->update([
         'estimated_price'=>$request->estimated_price,
         'status'=>$request->status,
       ]);
-      return back();
+      return back()->with('success','Design is accepted');
     }
     public function reject(Request $request, string $id)
     {

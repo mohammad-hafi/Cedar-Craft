@@ -74,11 +74,19 @@
 </div>
 
         <!-- Product Info -->
+        <form x-data="{quantity:1}" action="{{ route('product.add',$product->id) }}" method="POST">
         <div class="p-6 flex flex-col justify-between">
             <div>
                 <h1 class="text-3xl font-bold text-gray-800">{{$product->name}}</h1>
-                <p class="text-gray-500 mt-2">Material: {{$product->material->type}}</p>
-                <p class="text-gray-500">Dimensions: {{$product->dimentions}}</p>
+<div class=" ml-4 flex items-center gap-3">
+  <label class="block font-semibold text-gray-800 mb-2">Material:</label>
+ <select name="material" id="material" class="rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
+      @foreach ($materials as $type)
+          <option value="{{ $type->id }}">{{$type->type}}</option>
+      @endforeach  
+    </select>
+    
+</div>                 <p class="text-gray-500">Dimensions: {{$product->dimentions}}</p>
 
                 <p class="mt-4 text-gray-700">
                     {{$product->description}}
@@ -86,7 +94,6 @@
 
                 <p class="mt-4 text-2xl font-semibold text-emerald-600">${{$product->price}}</p>
             </div>
-            <form x-data="{quantity:1}" action="{{ route('product.add',$product->id) }}" method="POST">
                 @csrf
                 @auth
                 <x-form.field x-model="quantity" label="Quantity" name="quantity" type="number" min="1"/>    

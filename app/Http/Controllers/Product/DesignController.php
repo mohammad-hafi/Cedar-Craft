@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Design;
 use App\Models\DesignImages;
 use App\Models\Material;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -22,6 +23,7 @@ class DesignController extends Controller
         return view('pages.customize',[
             'designs'=>Auth::user()->designs,
             'materials'=>Material::all(),
+            'products'=>Product::all(),
             'categories'=>Category::all()
         ]);
     }

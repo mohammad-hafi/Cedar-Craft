@@ -17,7 +17,6 @@ Route::get('/shop',[ShopController::class,'index']);
 Route::get('/search-products', [ShopController::class, 'search']);
 
 Route::middleware('auth')->group(function () {
-    Route::post('/customize/add/{design}',[ShopController::class,'storeDesign'])->name('design.add');
     Route::post('/shop/add/{product}',[ShopController::class,'store'])->name('product.add');
     Route::delete('/logout',[LoginController::class,'destroy']);
     Route::get('/chat/users', [ChatController::class, 'users']);

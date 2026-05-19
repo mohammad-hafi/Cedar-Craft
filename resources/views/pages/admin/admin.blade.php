@@ -109,10 +109,10 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                                     @foreach($products as $product)
-
-                                        <label class="flex items-center gap-3 border rounded-xl p-3 hover:bg-gray-50 cursor-pointer">
-
-                                            <input
+                                    @if ($product->soft_delete !=1)
+                                    <label class="flex items-center gap-3 border rounded-xl p-3 hover:bg-gray-50 cursor-pointer">
+                                        
+                                        <input
                                                 type="checkbox"
                                                 name="featured_products[]"
                                                 value="{{ $product->id }}"
@@ -131,6 +131,7 @@
 
                                         </label>
 
+                                        @endif
                                     @endforeach
 
                                 </div>
@@ -302,14 +303,14 @@
         </div>
         <form action="/admin" method="POST" id="productForm" enctype="multipart/form-data" class="mt-6 grid grid-cols-1 gap-5 rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:grid-cols-2">
           @csrf
-            <div class="sm:col-span-2 space-y-6">
+        <div class="sm:col-span-2 space-y-6">
         <x-form.field label="Product Name*" name="name"/>
         <x-form.field type="number" label="Price*" name="price"/>
       <label class="block font-semibold text-gray-800 mb-2">Category*</label>
         <select name="category" id="category" class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-green-800 focus:border-green-800">
       @foreach ($categories as $type)
           <option value="{{ $type->id }}">{{$type->name}}</option>
-      @endforeach  
+      @endforeach 
     </select>
         <x-form.field type="number" label="Stock*" name="stock"/>
         <x-form.field label="Dimensions*" name="dimentions" placeholder="Enter product dimensions"/>
@@ -444,6 +445,7 @@
             <div class=" space-y-2">
               <div class="text-2xl font-bold text-emerald-900">{{ $item->product->name ?? $item->design->product_name }}</div>
               <div class="text-xl font-extrabold text-emerald-900">Quantity: {{$item->quantity}}</div>
+              <div class="mt-1 text-sm text-gray-600">Material: <span class="font-bold">{{ $item->material->type }}</span></div>
               <div class="mt-1 text-sm text-gray-600">Customer: <span class="font-bold">{{ $order->user->name }}</span></div>
               <div class="mt-1 text-xs text-gray-500">Created: {{ $item->created_at }}</div>
            </div>
@@ -451,7 +453,7 @@
             <div class="text-right space-y-2">
               <div class=" stat inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-extrabold text-amber-800 border border-amber-200">{{$order->status}}</div>
               <div class="mt-3 text-xs font-bold text-gray-500">Total</div>
-              <div class="text-2xl font-extrabold text-emerald-900">${{ $item->price_at_purchase * $item->quantity }}</div>
+              <div class="text-2xl font-extrabold text-emerald-900">${{ $item->price_at_purchase}}</div>
               @if($order->status->value == 'Paid')
               <button
                 onclick="markDelivery({{$order->id}})"

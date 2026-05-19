@@ -97,7 +97,9 @@
     <form method="POST" action="/admin/{{ $design->id }}/status">
         @csrf
         @method('PATCH')
-
+        <x-form.field type="number" label="Stock*" name="stock"
+         placeholder="Enter stock quantity" 
+            required/>
         <!-- Estimated Price Input -->
         <x-form.field 
             type="number" 
@@ -106,10 +108,8 @@
             placeholder="Enter estimated price" 
             required
         />
-
         <!-- Buttons Row -->
         <div class="mt-4 flex gap-3">
-
             <!-- ACCEPT -->
             <button 
                 type="submit"

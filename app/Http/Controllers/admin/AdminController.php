@@ -24,51 +24,32 @@ class AdminController extends Controller
      */
     public function index()
     {
-    $products = Product::all();
+   $categories = Category::all();
+$materials = Material::all();
 
-    $featuredProducts = json_decode(
-        Home::where('attribute', 'featured_products')->value('value'),
-        true
-    ) ?? [];
+$orders = Order::orderByRaw("
+    CASE
+        WHEN status = 'Pending' THEN 1
+        WHEN status = 'Paid' THEN 2
+        ELSE 3
+    END
+")->get();
 
-    $name = Home::where('attribute', 'website_name')->value('value');
-    $intro = Home::where('attribute', 'intro')->value('value');
-    $story = Home::where('attribute', 'story')->value('value');
-    $info = Home::where('attribute', 'info')->value('value');
-    $mission = Home::where('attribute', 'mission')->value('value');
-    $vision = Home::where('attribute', 'vision')->value('value');
-    $values = Home::where('attribute', 'values')->value('value');
-    $des = Home::where('attribute', 'description')->value('value');
-    $logo = Home::where('attribute', 'logo')->value('value');
+$designs = Design::all();
 
-    $categories=Category::all();
-    $materials=Material::all();
-    $orders=Order::all();
-    $designs=Design::all();
 $total = OrderItem::whereHas('order', function ($query) {
 
-    $query->whereIn('status', ['Paid', 'Delivery']);
+    $query->whereIn('status', ['Received']);
 
 })->sum("price_at_purchase");
 
-        return view('pages/admin/admin',compact(
-        'name',
-        'total',
-        'logo',
-        'mission',
-        'vision',
-        'values',
-        'info',
-        'story',
-        'featuredProducts',
-        'products',
-        'des',
-        'intro',
-        'categories',
-        'materials',
-        'orders',
-        'designs'
-    ));
+return view('pages/admin/admin', compact(
+    'total',
+    'categories',
+    'materials',
+    'orders',
+    'designs'
+));
     }
 
     /**

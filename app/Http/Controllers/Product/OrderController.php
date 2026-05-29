@@ -46,25 +46,25 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function delivery(Order $order)
+    public function delivery(Order $order,Request $request)
     {
-        $order->status=Status::DELIVERY;
-        $order->save();
+    $order->update([
+        'status' => Status::DELIVERY,
+    ]);
 
-        return response()->json(
-            [
-                'success'=>true,
-                'status'=>$order->status
-            ]
-        );
+    return redirect()->back();
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Order $order)
+    public function received(Order $order)
     {
-        //
+            $order->update([
+        'status' => Status::RECEIVED,
+    ]);
+
+    return redirect()->back();
     }
 
     /**
@@ -103,7 +103,7 @@ public function update(Request $request, Order $order)
     }
 
     $order->update([
-        'status' => Status::PAID,
+        'status' => Status::CONFIRM,
     ]);
 
     return redirect()->back();

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Home;
+use App\Models\Material;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -124,4 +126,40 @@ public function store(Request $request)
     public function about(){
     return view('pages.about');
     }
+    public function setting(){
+            $products = Product::all();
+
+    $featuredProducts = json_decode(
+        Home::where('attribute', 'featured_products')->value('value'),
+        true
+    ) ?? [];
+        $name = Home::where('attribute', 'website_name')->value('value');
+    $intro = Home::where('attribute', 'intro')->value('value');
+    $story = Home::where('attribute', 'story')->value('value');
+    $info = Home::where('attribute', 'info')->value('value');
+    $mission = Home::where('attribute', 'mission')->value('value');
+    $vision = Home::where('attribute', 'vision')->value('value');
+    $values = Home::where('attribute', 'values')->value('value');
+    $des = Home::where('attribute', 'description')->value('value');
+    $logo = Home::where('attribute', 'logo')->value('value');
+    return view('pages/admin/home_settings',compact(
+        'name',
+        'logo',
+        'mission',
+        'vision',
+        'values',
+        'info',
+        'story',
+        'featuredProducts',
+        'products',
+        'des',
+        'intro',
+    ));
+    }
+    public function addP(){
+        return view('pages/admin/products',[
+            'categories'=>Category::all(),
+            'materials'=>Material::all(),
+        ]);
+}
 }

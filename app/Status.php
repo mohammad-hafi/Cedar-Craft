@@ -8,6 +8,8 @@ enum Status: string
     case PENDING='Pending';
     case IN_PROGRESS='In Progress';
     case PAID='Paid';
+    case CONFIRM='Confirmed';
+    case RECEIVED='Received';
     case COMPLETED='Completed';
     case DELIVERY='Delivery';
 
@@ -17,6 +19,8 @@ enum Status: string
             Status::PENDING => 'Pending',
             Status::IN_PROGRESS => 'In Progress',
             Status::PAID => 'Paid',
+            Status::RECEIVED => 'Received',
+            Status::CONFIRM => 'Confirmed',
             Status::COMPLETED => 'Completed',
         };
     }

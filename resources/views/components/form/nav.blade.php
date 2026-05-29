@@ -12,11 +12,13 @@
     ['href'=>'/customize','label'=>'Customize'],
   ];
   $adminlinks=[
+    ['href'=>'/admin/settings','label'=>'Home Settings'],
     ['href'=>'/admin/home','label'=>'Home'],
     ['href'=>'/admin/customize','label'=>'Customize'],
+    ['href'=>'/admin/products','label'=>'Add Products'],
     ['href'=>'/about','label'=>'About'],
     ['href'=>'/shop','label'=>'My Shop'],
-    ['href'=>'/admin','label'=>'Admin'],
+    ['href'=>'/order','label'=>'Orders'],
   ];
 @endphp
 

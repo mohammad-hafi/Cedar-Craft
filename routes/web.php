@@ -26,10 +26,12 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('admin')->group(function () {
 Route::get('/admin/home',[PageController::class,'create']);
+Route::get('/admin/settings',[PageController::class,'setting']);
+Route::get('/admin/products',[PageController::class,'addP']);
 Route::post('/new',[PageController::class,'store']);
 Route::post('/new/about',[PageController::class,'storeAbout']);
 Route::get('/admin/customize',[AdminController::class,'customize']);
-Route::get('/admin',[AdminController::class,'index']);
+Route::get('/order',[AdminController::class,'index']);
 Route::post('/admin',[AdminController::class,'store']);
 Route::post('/admin/category',[AdminController::class,'createCategory']);
 Route::post('/admin/material',[AdminController::class,'createMaterial']);
@@ -38,6 +40,7 @@ Route::patch('/admin/products/{product}',[AdminController::class,'destroy']);
 Route::patch('/admin/{design}/status',[AdminController::class,'update']);
 Route::patch('/admin/reject/{design}',[AdminController::class,'reject']);
 Route::patch('/orders/{order}/delivery', [OrderController::class, 'delivery']);
+Route::patch('/order/{order}/received', [OrderController::class, 'received']);
 });
 
 

@@ -145,5 +145,184 @@
 @endforeach
         </div>
 </section>
+<div 
+    x-data="{
+        chatOpen: false,
 
+        newMessage: '',
+
+        selectedUser: {},
+
+        users: [],
+
+        messages: [],
+        async init() {
+
+    let res = await axios.get('/chat/users');
+
+    this.users = res.data;
+
+    window.Echo.private('chat.{{ auth()->id() }}')
+
+    .listen('MessageSent', (e) => {
+
+        this.messages.push(e.message);
+    });
+},
+        async selectUser(user) {
+
+    this.selectedUser = user;
+
+    let res = await axios.get('/chat/messages/' + user.id);
+
+    this.messages = res.data;
+},
+
+        async sendMessage() {
+
+    if(this.newMessage.trim() == '') return;
+
+    if(!this.selectedUser.id) {
+        alert('Please select a user first');
+        return;
+    }
+
+    try {
+        let res = await axios.post('/chat/send', {
+            receiver_id: this.selectedUser.id,
+            message: this.newMessage,
+        });
+        this.messages.push(res.data);
+        this.newMessage = '';
+    } catch(error) {
+        if(error.response?.status === 422) {
+            const errors = error.response.data.errors;
+            alert(Object.values(errors)[0][0]);
+        } else {
+            alert('Error sending message');
+        }
+    }
+}
+    }"
+    class="fixed bottom-6 right-6 z-50"
+>
+
+    <!-- Floating Button -->
+    <button 
+        @click="chatOpen = !chatOpen"
+        class="bg-yellow-500 text-white p-4 rounded-full shadow-xl hover:bg-emerald-800 transition"
+    >
+        💬
+    </button>
+
+    <!-- Chat Box -->
+    <div 
+        x-show="chatOpen"
+        x-transition
+
+        @admin
+            class="fixed bottom-20 right-6 w-[700px] h-[500px] bg-white rounded-2xl shadow-2xl border flex"
+        @else
+            class="fixed bottom-20 right-6 w-[350px] h-[500px] bg-white shadow-2xl border flex"
+        @endadmin
+    >
+
+        <!-- USERS LIST -->
+        @admin
+        <div class="w-1/3 border-r bg-gray-50 rounded-l-2xl overflow-y-auto">
+
+            <!-- Header -->
+            <div class="p-4 font-bold text-white bg-emerald-900 rounded-tl-2xl">
+                Users
+            </div>
+
+            <!-- User Cards -->
+            <template x-for="user in users" :key="user.id">
+
+              <div 
+                    @click="selectUser(user)"
+                    class="p-4 border-b cursor-pointer hover:bg-gray-200 transition"
+                    :class="selectedUser.id === user.id ? 'bg-gray-200' : ''"
+                >
+
+                    <div 
+                        class="font-semibold"
+                        x-text="user.name"
+                    ></div>
+
+                </div>
+
+            </template>
+
+        </div>
+        @endadmin
+
+        <!-- CHAT -->
+        <div class="flex-1 flex flex-col">
+
+            <!-- Header -->
+            <div class="bg-emerald-900 text-white p-3 flex justify-between items-center
+
+                @admin
+                    rounded-tr-2xl
+                @else
+                    rounded-t-2xl
+                @endadmin
+            ">
+
+                <span class="font-bold">
+                    Chat with 
+                    <span x-text="selectedUser.name || 'Support'"></span>
+                </span>
+
+                <button @click="chatOpen = false">
+                    ✕
+                </button>
+
+            </div>
+
+            <!-- Messages -->
+            <div class="p-3 flex-1 overflow-y-auto space-y-2">
+
+                <template x-for="msg in messages" :key="msg.id">
+
+                    <div 
+                        class="text-sm p-2 rounded max-w-[80%]"
+                        :class="msg.sender_id == {{ auth()->id() }}
+                            ? 'bg-emerald-200 ml-auto'
+                            : 'bg-gray-100'"
+                    >
+
+                        <span x-text="msg.message"></span>
+
+                    </div>
+
+                </template>
+
+            </div>
+
+            <!-- Input -->
+            <form 
+                @submit.prevent="sendMessage"
+                class="flex border-t"
+            >
+
+                <input 
+                    x-model="newMessage"
+                    type="text"
+                    placeholder="Type a message..."
+                    class="flex-1 p-2 outline-none"
+                >
+
+                <button class="px-4 bg-emerald-900 text-white">
+                    Send
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
 </x-layout>

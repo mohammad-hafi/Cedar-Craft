@@ -84,7 +84,7 @@ $order=$user->orders()->firstOrCreate([
             'quantity'=>$newQuantity,
             'price_at_purchase'=>$price * $newQuantity
          ]);
-        return redirect()->back()->with('success','Product quantity updated in cart successfully');
+        return redirect('/shop')->with('success','Product quantity updated in cart successfully');
     }else{
         $order->items()->create([
     'product_id' => $product->id,
@@ -92,7 +92,7 @@ $order=$user->orders()->firstOrCreate([
     'price_at_purchase' => $price * $request->quantity,
     'material_id' => $materialId,
         ]);
-        return redirect()->back()->with('success','Product added to cart successfully');
+        return redirect('/shop')->with('success','Product added to cart successfully');
         }
     
     }

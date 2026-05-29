@@ -31,7 +31,7 @@ class LoginController extends Controller
         if (auth()->check() && auth()->user()->is_admin()) {
        return redirect('/admin/home')->with('success', "welcome back ".Auth::user()->name);
    }
-        return redirect('/')->with('success', "welcome back ".Auth::user()->name);
+        return redirect('/shop')->with('success', "welcome back ".Auth::user()->name);
     }
 
     return back()->withErrors([

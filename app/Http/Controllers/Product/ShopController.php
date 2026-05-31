@@ -37,7 +37,7 @@ class ShopController extends Controller
         $query->where('price', '<=', $request->max_price);
     }
           $products = $query->with(['images','category','material'])
-        ->paginate(3)
+        ->paginate(6)
         ->withQueryString();
            return view('pages.shop.shop', [
         'products' => $products,
@@ -160,7 +160,7 @@ $order=$user->orders()->firstOrCreate([
         if($request->filled('search')){
             $query->where('name','like','%'.$request->search.'%');
         }
-        $products = $query->paginate(3)->withQueryString();
+        $products = $query->paginate(6)->withQueryString();
         return view('partials.productgrid',['products' => $products])->render();
     }
  

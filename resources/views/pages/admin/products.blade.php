@@ -36,7 +36,7 @@
           </div>
 
           <div class="sm:col-span-2 flex flex-col gap-3 sm:flex-row sm:justify-end">
-    <button type="button" onclick="storeProduct()" class="w-full rounded-lg bg-emerald-900 px-6 py-3 font-extrabold text-white hover:bg-emerald-950 sm:w-auto">Save Product</button>
+    <button type="submit" class="w-full rounded-lg bg-emerald-900 px-6 py-3 font-extrabold text-white hover:bg-emerald-950 sm:w-auto">Save Product</button>
           </div>
         </form>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

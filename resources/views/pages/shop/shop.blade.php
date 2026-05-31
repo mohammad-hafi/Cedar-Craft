@@ -76,7 +76,7 @@
           placeholder="Search products..."
           class="w-full border rounded-lg p-3 mb-6"
           />
-<div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+<div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 auto-rows-fr">
   @include('partials.productgrid',['products'=>$products])
   <div class="mt-6">
           {{ $products->links() }}

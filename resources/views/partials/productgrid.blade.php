@@ -5,7 +5,7 @@
 @endif 
 <div class="group rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-xl w-full transition flex flex-col h-full">
   <!-- IMAGE SLIDER -->
-<div class="relative bg-gray-50 overflow-hidden rounded-t-2xl"
+<div class="relative bg-gray-50 overflow-hidden rounded-t-2xl h-64 w-full"
  x-data="{
         index: 0,
         images: @js($product->images->pluck('image')),
@@ -17,7 +17,7 @@
         x-show="index === i"
         x-transition.opacity
         :src="'/storage/' + img"
-            class="max-w-full transition duration-300 hover:scale-110 max-h-full object-cover"
+            class="w-full h-full transition duration-300 hover:scale-110 object-cover"
       >
     </template>
     <!-- Category Badge -->
@@ -29,7 +29,7 @@
   </div>
 
   <!-- CONTENT -->
-  <div class="p-6">
+  <div class="p-6 flex flex-col h-full">
 
     <!-- Title + Price -->
 <div class="flex items-start justify-between gap-4 mb-2">
@@ -77,7 +77,7 @@
     </div>
     
     @admin
-  <div class="flex items-center mt-2 gap-3">
+  <div class="flex items-center mt-auto gap-3">
   
   <button
     @click="

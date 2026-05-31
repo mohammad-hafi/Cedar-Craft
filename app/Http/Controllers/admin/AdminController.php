@@ -76,7 +76,7 @@ return view('pages/admin/admin', compact(
             'category_id'=>$request->category,
             'price'=>$request->price,
             'stock'=>$request->stock,
-            'dimentions'=>$request->dimentions
+            'dimentions'=>$request->dimentions,
         ]);
         if($request->hasFile('image')){
             foreach($request->file('image') as $image){
@@ -86,11 +86,7 @@ return view('pages/admin/admin', compact(
                 ]);
             }
         }
-        return response()->json([
-            'success'=>true,
-            'message'=>'Product created successfully',
-            'data'=>$product->load('images')
-        ]);
+        return back()->with('success','Product added successfully');
     }
 
     /**

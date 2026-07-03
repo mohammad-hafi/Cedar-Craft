@@ -128,7 +128,6 @@ This project was created to:
 * Order management
 * Admin dashboard
 * Product image gallery
-* User reviews and ratings
 
 ## License
 
